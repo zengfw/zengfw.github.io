@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zengfw.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="懂一点编程...">
+<meta property="og:type" content="website">
+<meta property="og:title" content="神秘河流">
+<meta property="og:url" content="https://zengfw.github.io/index.html">
+<meta property="og:site_name" content="神秘河流">
+<meta property="og:description" content="懂一点编程...">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="曾繁伟">
+<meta property="article:tag" content="Android,Shell,Kotlin,Java">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zengfw.github.io/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>神秘河流</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">神秘河流</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zengfw" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zengfw.github.io/2021/03/20/Shell%E8%84%9A%E6%9C%ACgradle%E5%91%BD%E4%BB%A4%E5%92%8Cgradlew%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.jpg">
+      <meta itemprop="name" content="曾繁伟">
+      <meta itemprop="description" content="懂一点编程...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="神秘河流">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/20/Shell%E8%84%9A%E6%9C%ACgradle%E5%91%BD%E4%BB%A4%E5%92%8Cgradlew%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8C%BA%E5%88%AB/" class="post-title-link" itemprop="url">Shell工具gradle和gradlew脚本的区别</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-20 00:00:00" itemprop="dateCreated datePublished" datetime="2021-03-20T00:00:00+08:00">2021-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-04 12:34:43" itemprop="dateModified" datetime="2021-06-04T12:34:43+08:00">2021-06-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>了解gradlew和gradle命令的区别之前，尝试花几分钟思考下面几个问题：</p>
+</blockquote>
+<ul>
+<li>gradlew是一个什么命令工具呢？</li>
+<li>为什么要有这个工具？</li>
+<li>gradlew脚本是怎样的？</li>
+<li>gradlew命令和gradle命令的区别？</li>
+</ul>
+<h2 id="一、gradlew、gradle脚本的区别"><a href="#一、gradlew、gradle脚本的区别" class="headerlink" title="一、gradlew、gradle脚本的区别"></a>一、gradlew、gradle脚本的区别</h2><p>先看看gradlew脚本代码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env sh</span></span><br><span class="line"></span><br><span class="line">PRG=<span class="string">&quot;<span class="variable">$0</span>&quot;</span></span><br><span class="line"><span class="comment"># 1.检查是否是软连接</span></span><br><span class="line"><span class="keyword">while</span> [ -h <span class="string">&quot;<span class="variable">$PRG</span>&quot;</span> ] ; <span class="keyword">do</span></span><br><span class="line">    ls=`ls -ld <span class="string">&quot;<span class="variable">$PRG</span>&quot;</span>`</span><br><span class="line">    link=`expr <span class="string">&quot;<span class="variable">$ls</span>&quot;</span> : <span class="string">&#x27;.*-&gt; \(.*\)$&#x27;</span>`</span><br><span class="line">    <span class="keyword">if</span> expr <span class="string">&quot;<span class="variable">$link</span>&quot;</span> : <span class="string">&#x27;/.*&#x27;</span> &gt; /dev/null; <span class="keyword">then</span></span><br><span class="line">        PRG=<span class="string">&quot;<span class="variable">$link</span>&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        PRG=`dirname <span class="string">&quot;<span class="variable">$PRG</span>&quot;</span>`<span class="string">&quot;/<span class="variable">$link</span>&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line">SAVED=<span class="string">&quot;`pwd`&quot;</span></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;`dirname \&quot;<span class="variable">$PRG</span>\&quot;`/&quot;</span> &gt;/dev/null</span><br><span class="line">APP_HOME=<span class="string">&quot;`pwd -P`&quot;</span></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$SAVED</span>&quot;</span> &gt;/dev/null</span><br><span class="line"></span><br><span class="line">APP_NAME=<span class="string">&quot;Gradle&quot;</span></span><br><span class="line">APP_BASE_NAME=`basename <span class="string">&quot;<span class="variable">$0</span>&quot;</span>`</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.</span></span><br><span class="line">DEFAULT_JVM_OPTS=<span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Use the maximum available, or set MAX_FD != -1 to use that value.</span></span><br><span class="line">MAX_FD=<span class="string">&quot;maximum&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">warn</span></span> () &#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;$*&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">die</span></span> () &#123;</span><br><span class="line">    <span class="built_in">echo</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;$*&quot;</span></span><br><span class="line">    <span class="built_in">echo</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.获取系统内核信息</span></span><br><span class="line">cygwin=<span class="literal">false</span></span><br><span class="line">msys=<span class="literal">false</span></span><br><span class="line">darwin=<span class="literal">false</span></span><br><span class="line">nonstop=<span class="literal">false</span></span><br><span class="line"><span class="keyword">case</span> <span class="string">&quot;`uname`&quot;</span> <span class="keyword">in</span></span><br><span class="line">  CYGWIN* )</span><br><span class="line">    cygwin=<span class="literal">true</span></span><br><span class="line">    ;;</span><br><span class="line">  Darwin* )</span><br><span class="line">    darwin=<span class="literal">true</span></span><br><span class="line">    ;;</span><br><span class="line">  MINGW* )</span><br><span class="line">    msys=<span class="literal">true</span></span><br><span class="line">    ;;</span><br><span class="line">  NONSTOP* )</span><br><span class="line">    nonstop=<span class="literal">true</span></span><br><span class="line">    ;;</span><br><span class="line"><span class="keyword">esac</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.设置classpath路径</span></span><br><span class="line">CLASSPATH=<span class="variable">$APP_HOME</span>/gradle/wrapper/gradle-wrapper.jar</span><br><span class="line"></span><br><span class="line"><span class="comment"># Determine the Java command to use to start the JVM.</span></span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$JAVA_HOME</span>&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">if</span> [ -x <span class="string">&quot;<span class="variable">$JAVA_HOME</span>/jre/sh/java&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">        <span class="comment"># IBM&#x27;s JDK on AIX uses strange locations for the executables</span></span><br><span class="line">        JAVACMD=<span class="string">&quot;<span class="variable">$JAVA_HOME</span>/jre/sh/java&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        JAVACMD=<span class="string">&quot;<span class="variable">$JAVA_HOME</span>/bin/java&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="keyword">if</span> [ ! -x <span class="string">&quot;<span class="variable">$JAVACMD</span>&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">        die <span class="string">&quot;ERROR: JAVA_HOME is set to an invalid directory: <span class="variable">$JAVA_HOME</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Please set the JAVA_HOME variable in your environment to match the</span></span><br><span class="line"><span class="string">location of your Java installation.&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    JAVACMD=<span class="string">&quot;java&quot;</span></span><br><span class="line">    <span class="built_in">which</span> java &gt;/dev/null 2&gt;&amp;1 || die <span class="string">&quot;ERROR: JAVA_HOME is not set and no &#x27;java&#x27; command could be found in your PATH.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Please set the JAVA_HOME variable in your environment to match the</span></span><br><span class="line"><span class="string">location of your Java installation.&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Increase the maximum file descriptors if we can.</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$cygwin</span>&quot;</span> = <span class="string">&quot;false&quot;</span> -a <span class="string">&quot;<span class="variable">$darwin</span>&quot;</span> = <span class="string">&quot;false&quot;</span> -a <span class="string">&quot;<span class="variable">$nonstop</span>&quot;</span> = <span class="string">&quot;false&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    MAX_FD_LIMIT=`<span class="built_in">ulimit</span> -H -n`</span><br><span class="line">    <span class="keyword">if</span> [ $? -eq 0 ] ; <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$MAX_FD</span>&quot;</span> = <span class="string">&quot;maximum&quot;</span> -o <span class="string">&quot;<span class="variable">$MAX_FD</span>&quot;</span> = <span class="string">&quot;max&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">            MAX_FD=<span class="string">&quot;<span class="variable">$MAX_FD_LIMIT</span>&quot;</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">        <span class="built_in">ulimit</span> -n <span class="variable">$MAX_FD</span></span><br><span class="line">        <span class="keyword">if</span> [ $? -ne 0 ] ; <span class="keyword">then</span></span><br><span class="line">            warn <span class="string">&quot;Could not set maximum file descriptor limit: <span class="variable">$MAX_FD</span>&quot;</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        warn <span class="string">&quot;Could not query maximum file descriptor limit: <span class="variable">$MAX_FD_LIMIT</span>&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># For Darwin, add options to specify how the application appears in the dock</span></span><br><span class="line"><span class="keyword">if</span> <span class="variable">$darwin</span>; <span class="keyword">then</span></span><br><span class="line">    GRADLE_OPTS=<span class="string">&quot;<span class="variable">$GRADLE_OPTS</span> \&quot;-Xdock:name=<span class="variable">$APP_NAME</span>\&quot; \&quot;-Xdock:icon=<span class="variable">$APP_HOME</span>/media/gradle.icns\&quot;&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># For Cygwin, switch paths to Windows format before running java</span></span><br><span class="line"><span class="keyword">if</span> <span class="variable">$cygwin</span> ; <span class="keyword">then</span></span><br><span class="line">    APP_HOME=`cygpath --path --mixed <span class="string">&quot;<span class="variable">$APP_HOME</span>&quot;</span>`</span><br><span class="line">    CLASSPATH=`cygpath --path --mixed <span class="string">&quot;<span class="variable">$CLASSPATH</span>&quot;</span>`</span><br><span class="line">    JAVACMD=`cygpath --unix <span class="string">&quot;<span class="variable">$JAVACMD</span>&quot;</span>`</span><br><span class="line"></span><br><span class="line">    <span class="comment"># We build the pattern for arguments to be converted via cygpath</span></span><br><span class="line">    ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -<span class="built_in">type</span> d 2&gt;/dev/null`</span><br><span class="line">    SEP=<span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> dir <span class="keyword">in</span> <span class="variable">$ROOTDIRSRAW</span> ; <span class="keyword">do</span></span><br><span class="line">        ROOTDIRS=<span class="string">&quot;$ROOTDIRS$SEP<span class="variable">$dir</span>&quot;</span></span><br><span class="line">        SEP=<span class="string">&quot;|&quot;</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line">    OURCYGPATTERN=<span class="string">&quot;(^(<span class="variable">$ROOTDIRS</span>))&quot;</span></span><br><span class="line">    <span class="comment"># Add a user-defined pattern to the cygpath arguments</span></span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$GRADLE_CYGPATTERN</span>&quot;</span> != <span class="string">&quot;&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">        OURCYGPATTERN=<span class="string">&quot;<span class="variable">$OURCYGPATTERN</span>|(<span class="variable">$GRADLE_CYGPATTERN</span>)&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="comment"># Now convert the arguments - kludge to limit ourselves to /bin/sh</span></span><br><span class="line">    i=0</span><br><span class="line">    <span class="keyword">for</span> arg <span class="keyword">in</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span> ; <span class="keyword">do</span></span><br><span class="line">        CHECK=`<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$arg</span>&quot;</span>|egrep -c <span class="string">&quot;<span class="variable">$OURCYGPATTERN</span>&quot;</span> -`</span><br><span class="line">        CHECK2=`<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$arg</span>&quot;</span>|egrep -c <span class="string">&quot;^-&quot;</span>`                                 <span class="comment">### Determine if an option</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> [ <span class="variable">$CHECK</span> -ne 0 ] &amp;&amp; [ <span class="variable">$CHECK2</span> -eq 0 ] ; <span class="keyword">then</span>                    <span class="comment">### Added a condition</span></span><br><span class="line">            <span class="built_in">eval</span> `<span class="built_in">echo</span> args<span class="variable">$i</span>`=`cygpath --path --ignore --mixed <span class="string">&quot;<span class="variable">$arg</span>&quot;</span>`</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">eval</span> `<span class="built_in">echo</span> args<span class="variable">$i</span>`=<span class="string">&quot;\&quot;<span class="variable">$arg</span>\&quot;&quot;</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">        i=$((i+<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line">    <span class="keyword">case</span> <span class="variable">$i</span> <span class="keyword">in</span></span><br><span class="line">        (0) <span class="built_in">set</span> -- ;;</span><br><span class="line">        (1) <span class="built_in">set</span> -- <span class="string">&quot;<span class="variable">$args0</span>&quot;</span> ;;</span><br><span class="line">        (2) <span class="built_in">set</span> -- <span class="string">&quot;<span class="variable">$args0</span>&quot;</span> <span class="string">&quot;<span class="variable">$args1</span>&quot;</span> ;;</span><br><span class="line">        (3) <span class="built_in">set</span> -- <span class="string">&quot;<span class="variable">$args0</span>&quot;</span> <span class="string">&quot;<span class="variable">$args1</span>&quot;</span> <span class="string">&quot;<span class="variable">$args2</span>&quot;</span> ;;</span><br><span class="line">        (4) <span class="built_in">set</span> -- <span class="string">&quot;<span class="variable">$args0</span>&quot;</span> <span class="string">&quot;<span class="variable">$args1</span>&quot;</span> <span class="string">&quot;<span class="variable">$args2</span>&quot;</span> <span class="string">&quot;<span class="variable">$args3</span>&quot;</span> ;;</span><br><span class="line">        (5) <span class="built_in">set</span> -- <span class="string">&quot;<span class="variable">$args0</span>&quot;</span> <span class="string">&quot;<span class="variable">$args1</span>&quot;</span> <span class="string">&quot;<span class="variable">$args2</span>&quot;</span> <span class="string">&quot;<span class="variable">$args3</span>&quot;</span> <span class="string">&quot;<span class="variable">$args4</span>&quot;</span> ;;</span><br><span class="line">        (6) <span class="built_in">set</span> -- <span class="string">&quot;<span class="variable">$args0</span>&quot;</span> <span class="string">&quot;<span class="variable">$args1</span>&quot;</span> <span class="string">&quot;<span class="variable">$args2</span>&quot;</span> <span class="string">&quot;<span class="variable">$args3</span>&quot;</span> <span class="string">&quot;<span class="variable">$args4</span>&quot;</span> <span class="string">&quot;<span class="variable">$args5</span>&quot;</span> ;;</span><br><span class="line">        (7) <span class="built_in">set</span> -- <span class="string">&quot;<span class="variable">$args0</span>&quot;</span> <span class="string">&quot;<span class="variable">$args1</span>&quot;</span> <span class="string">&quot;<span class="variable">$args2</span>&quot;</span> <span class="string">&quot;<span class="variable">$args3</span>&quot;</span> <span class="string">&quot;<span class="variable">$args4</span>&quot;</span> <span class="string">&quot;<span class="variable">$args5</span>&quot;</span> <span class="string">&quot;<span class="variable">$args6</span>&quot;</span> ;;</span><br><span class="line">        (8) <span class="built_in">set</span> -- <span class="string">&quot;<span class="variable">$args0</span>&quot;</span> <span class="string">&quot;<span class="variable">$args1</span>&quot;</span> <span class="string">&quot;<span class="variable">$args2</span>&quot;</span> <span class="string">&quot;<span class="variable">$args3</span>&quot;</span> <span class="string">&quot;<span class="variable">$args4</span>&quot;</span> <span class="string">&quot;<span class="variable">$args5</span>&quot;</span> <span class="string">&quot;<span class="variable">$args6</span>&quot;</span> <span class="string">&quot;<span class="variable">$args7</span>&quot;</span> ;;</span><br><span class="line">        (9) <span class="built_in">set</span> -- <span class="string">&quot;<span class="variable">$args0</span>&quot;</span> <span class="string">&quot;<span class="variable">$args1</span>&quot;</span> <span class="string">&quot;<span class="variable">$args2</span>&quot;</span> <span class="string">&quot;<span class="variable">$args3</span>&quot;</span> <span class="string">&quot;<span class="variable">$args4</span>&quot;</span> <span class="string">&quot;<span class="variable">$args5</span>&quot;</span> <span class="string">&quot;<span class="variable">$args6</span>&quot;</span> <span class="string">&quot;<span class="variable">$args7</span>&quot;</span> <span class="string">&quot;<span class="variable">$args8</span>&quot;</span> ;;</span><br><span class="line">    <span class="keyword">esac</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Escape application args</span></span><br><span class="line"><span class="function"><span class="title">save</span></span> () &#123;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">do</span> <span class="built_in">printf</span> %s\\n <span class="string">&quot;<span class="variable">$i</span>&quot;</span> | sed <span class="string">&quot;s/&#x27;/&#x27;\\\\&#x27;&#x27;/g;1s/^/&#x27;/;\$s/\$/&#x27; \\\\/&quot;</span> ; <span class="keyword">done</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot; &quot;</span></span><br><span class="line">&#125;</span><br><span class="line">APP_ARGS=$(save <span class="string">&quot;<span class="variable">$@</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Collect all arguments for the java command, following the shell quoting and substitution rules</span></span><br><span class="line"><span class="built_in">eval</span> <span class="built_in">set</span> -- <span class="variable">$DEFAULT_JVM_OPTS</span> <span class="variable">$JAVA_OPTS</span> <span class="variable">$GRADLE_OPTS</span> <span class="string">&quot;\&quot;-Dorg.gradle.appname=<span class="variable">$APP_BASE_NAME</span>\&quot;&quot;</span> -classpath <span class="string">&quot;\&quot;<span class="variable">$CLASSPATH</span>\&quot;&quot;</span> org.gradle.wrapper.GradleWrapperMain <span class="string">&quot;<span class="variable">$APP_ARGS</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># by default we should be in the correct project dir, but when run from Finder on Mac, the cwd is wrong</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="subst">$(uname)</span>&quot;</span> = <span class="string">&quot;Darwin&quot;</span> ] &amp;&amp; [ <span class="string">&quot;<span class="variable">$HOME</span>&quot;</span> = <span class="string">&quot;<span class="variable">$PWD</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">cd</span> <span class="string">&quot;<span class="subst">$(dirname <span class="string">&quot;<span class="variable">$0</span>&quot;</span>)</span>&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4.执行java命令运行wrapper jar包里头的类文件</span></span><br><span class="line"><span class="built_in">exec</span> <span class="string">&quot;<span class="variable">$JAVACMD</span>&quot;</span> <span class="string">&quot;<span class="variable">$@</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>代码量不多，脚本主要干了几件事：</p>
+<blockquote>
+<p>获取电脑系统内核的信息，JRE环境信息等；</p>
+<p>设置classpath路径；</p>
+<p>执行java命令工具，调用gradle jar包的class文件</p>
+</blockquote>
+</blockquote>
+<p>在gradlew脚本中添加log打印：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$JAVACMD</span> <span class="variable">$@</span>&quot;</span></span><br><span class="line"></span><br><span class="line">$ ./gradlew -v</span><br><span class="line">/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home/bin/java -Xdock:name=Gradle -Xdock:icon=/Users/cengfanwei/zengfw/ATrain/media/gradle.icns -Dorg.gradle.appname=gradlew -classpath /Users/cengfanwei/zengfw/ATrain/gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain -v</span><br></pre></td></tr></table></figure>
+
+<p>从打印结果可知，最终其实是通过java命令执行gradle-wrapper.jar包的GradleWrapperMain类，再继续看看GradleWrapperMain干了什么事情…</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GradleWrapperMain</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String GRADLE_USER_HOME_OPTION = <span class="string">&quot;g&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String GRADLE_USER_HOME_DETAILED_OPTION = <span class="string">&quot;gradle-user-home&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String GRADLE_QUIET_OPTION = <span class="string">&quot;q&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String GRADLE_QUIET_DETAILED_OPTION = <span class="string">&quot;quiet&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        File wrapperJar = wrapperJar();</span><br><span class="line">        File propertiesFile = wrapperProperties(wrapperJar);</span><br><span class="line">        File rootDir = rootDir(wrapperJar);</span><br><span class="line"></span><br><span class="line">        CommandLineParser parser = <span class="keyword">new</span> CommandLineParser();</span><br><span class="line">        parser.allowUnknownOptions();</span><br><span class="line">        parser.option(<span class="keyword">new</span> String[]&#123;<span class="string">&quot;g&quot;</span>, <span class="string">&quot;gradle-user-home&quot;</span>&#125;).hasArgument();</span><br><span class="line">        parser.option(<span class="keyword">new</span> String[]&#123;<span class="string">&quot;q&quot;</span>, <span class="string">&quot;quiet&quot;</span>&#125;);</span><br><span class="line"></span><br><span class="line">        SystemPropertiesCommandLineConverter converter = <span class="keyword">new</span> SystemPropertiesCommandLineConverter();</span><br><span class="line">        converter.configure(parser);</span><br><span class="line"></span><br><span class="line">        ParsedCommandLine options = parser.parse(args);</span><br><span class="line"></span><br><span class="line">        Properties systemProperties = System.getProperties();</span><br><span class="line">        systemProperties.putAll(converter.convert(options, <span class="keyword">new</span> HashMap()));</span><br><span class="line"></span><br><span class="line">        File gradleUserHome = gradleUserHome(options);</span><br><span class="line"></span><br><span class="line">        addSystemProperties(gradleUserHome, rootDir);</span><br><span class="line"></span><br><span class="line">        Logger logger = logger(options);</span><br><span class="line"></span><br><span class="line">        WrapperExecutor wrapperExecutor = WrapperExecutor.forWrapperPropertiesFile(propertiesFile);</span><br><span class="line">        wrapperExecutor.execute(args, <span class="keyword">new</span> Install(logger, <span class="keyword">new</span> Download(logger, <span class="string">&quot;gradlew&quot;</span>, wrapperVersion()), <span class="keyword">new</span> PathAssembler(gradleUserHome)), <span class="keyword">new</span> BootstrapMainStarter());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WrapperExecutor</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(String[] args, Install install, BootstrapMainStarter bootstrapMainStarter)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        File gradleHome = install.createDist(<span class="keyword">this</span>.config);</span><br><span class="line">        bootstrapMainStarter.start(args, gradleHome);</span><br><span class="line">    &#125;	</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BootstrapMainStarter</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">(String[] args, File gradleHome)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        File gradleJar = <span class="keyword">this</span>.findLauncherJar(gradleHome);</span><br><span class="line">        URLClassLoader contextClassLoader = <span class="keyword">new</span> URLClassLoader(<span class="keyword">new</span> URL[]&#123;gradleJar.toURI().toURL()&#125;, ClassLoader.getSystemClassLoader().getParent());</span><br><span class="line">        Thread.currentThread().setContextClassLoader(contextClassLoader);</span><br><span class="line">        Class&lt;?&gt; mainClass = contextClassLoader.loadClass(<span class="string">&quot;org.gradle.launcher.GradleMain&quot;</span>);</span><br><span class="line">        Method mainMethod = mainClass.getMethod(<span class="string">&quot;main&quot;</span>, String[].class);</span><br><span class="line">        mainMethod.invoke((Object)<span class="keyword">null</span>, args);</span><br><span class="line">        <span class="keyword">if</span> (contextClassLoader <span class="keyword">instanceof</span> Closeable) &#123;</span><br><span class="line">            contextClassLoader.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;	</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GradleMain</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        (<span class="keyword">new</span> ProcessBootstrap()).run(<span class="string">&quot;org.gradle.launcher.Main&quot;</span>, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> <span class="keyword">extends</span> <span class="title">EntryPoint</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        (<span class="keyword">new</span> Main()).run(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doAction</span><span class="params">(String[] args, ExecutionListener listener)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.createActionFactory().convert(Arrays.asList(args)).execute(listener);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">CommandLineActionFactory <span class="title">createActionFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> CommandLineActionFactory();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>看到这里比较清晰的，WrapperExecutor会先检查是否有配置已下载到本地的gradle路径，没有则先从服务器下载（根据gradle-wrapper.properties文件配置distributionUrl链接），再是根据传进来的命令行参数，用命令行工厂构建不同的命令行action，并通过命令解析器execute对应的命令行action；</p>
+<blockquote>
+<p>Gradle Wrapper工作流程图</p>
+</blockquote>
+<p><img src="/images/gradle_gradlew_difference_003.png" alt="图片"></p>
+<blockquote>
+<p>思考：如何避免同个项目在其他开发者电脑上运行时，因gradle版本不同而引发各种问题？</p>
+<blockquote>
+<p>可上传wrapper目录，统一gradle-wrapper.properties配置的gradle版本，使得其他开发者也用同个gradle版本构建同个项目。</p>
+</blockquote>
+</blockquote>
+<p>以上是关于gradlew脚本的了解，那gradle脚本呢？我们直接打开文件对比，就基本可以知道两份脚本之间的主要差异了：</p>
+<p><img src="/images/gradle_gradlew_difference_001.png" alt="图片"></p>
+<p><img src="/images/gradle_gradlew_difference_002.png" alt="图片"></p>
+<p>差异之所以在classpath，是因为java命令运行jar包里头的文件的话，我们需要通过classpath指定命令运行时查找class文件的路径。</p>
+<p>同样，在gradle脚本中添加 <code>echo &quot;$JAVACMD $@&quot;</code> 日志打印，得到如下打印：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$JAVACMD</span> <span class="variable">$@</span>&quot;</span></span><br><span class="line"></span><br><span class="line">$ ~/Library/Android/gradle/gradle-4.4/bin/gradle -v</span><br><span class="line">/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home/bin/java -Xdock:name=Gradle -Xdock:icon=/Users/cengfanwei/Library/Android/gradle/gradle-4.4/media/gradle.icns -Dorg.gradle.appname=gradle -classpath /Users/cengfanwei/Library/Android/gradle/gradle-4.4/lib/gradle-launcher-4.4.jar org.gradle.launcher.GradleMain -v</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>你会发现如果直接通过gradle命令的话，其实运行的是gradle-launcher-4.4.jar包里头的org.gradle.launcher.GradleMain类，之后的流程就跟上面从GradleMain开始一样的了！</strong></p>
+<blockquote>
+<p>思考：使用gradle命令效率比使用gradlew效率快的原因？</p>
+<blockquote>
+<p>因为gradlew命令，需要执行一些额外流程，如类加载、反射gradle-launcher-xx.jar包里头的类等等，最后再到org.gradle.launcher.GradleMain类的main函数。</p>
+</blockquote>
+</blockquote>
+<h2 id="二、gradle常用命令"><a href="#二、gradle常用命令" class="headerlink" title="二、gradle常用命令"></a>二、gradle常用命令</h2><blockquote>
+<p>前面了解gradlew、gradle的区别之后，下面列出一些gradle常用的命令</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>gradle androidDependencies</td>
+<td>查看项目依赖树</td>
+</tr>
+<tr>
+<td>gradle assembleDebug</td>
+<td>构建debug版本apk</td>
+</tr>
+<tr>
+<td>gradle assembleRelease</td>
+<td>构建release版本apk</td>
+</tr>
+<tr>
+<td>gradle installDebug</td>
+<td>安装debug版本apk到设备，在adb设备时，这个命令省每次都还要敲install命令行</td>
+</tr>
+<tr>
+<td>gradle installRelease</td>
+<td>同installDebug，只是apk版本是release</td>
+</tr>
+<tr>
+<td>gradle uninstallDebug</td>
+<td>卸载debug版本apk</td>
+</tr>
+<tr>
+<td>gradle clean</td>
+<td>清除build缓存</td>
+</tr>
+<tr>
+<td>gralde build –stacktrack</td>
+<td>构建整个模块，且打印整个构建流程的日志（包括异常日志）</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zengfw.github.io/2020/07/25/Shell%E6%A8%A1%E5%BC%8F%E5%B8%B8%E7%94%A8Android%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.jpg">
+      <meta itemprop="name" content="曾繁伟">
+      <meta itemprop="description" content="懂一点编程...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="神秘河流">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/25/Shell%E6%A8%A1%E5%BC%8F%E5%B8%B8%E7%94%A8Android%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">Shell模式常用Android调试命令</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-25 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-25T00:00:00+08:00">2020-07-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-16 23:33:24" itemprop="dateModified" datetime="2021-06-16T23:33:24+08:00">2021-06-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、常用命令列表"><a href="#一、常用命令列表" class="headerlink" title="一、常用命令列表"></a>一、常用命令列表</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>am start -n [package_name]/.[activity_name]</td>
+<td>通过具体activity启动应用</td>
+</tr>
+<tr>
+<td>am start -a [action] -d [uri]</td>
+<td>通过action、uri启动应用</td>
+</tr>
+<tr>
+<td>am start [package_name]</td>
+<td>通过包名启动应用</td>
+</tr>
+<tr>
+<td>am startservice -n [package_name]/.[service_name]</td>
+<td>通过具体service路径启动服务</td>
+</tr>
+<tr>
+<td>am startservice -a [action]</td>
+<td>通过action启动服务</td>
+</tr>
+<tr>
+<td>am force-stop [packageName]</td>
+<td>强制停止应用</td>
+</tr>
+<tr>
+<td>am broadcast -a [action]</td>
+<td>模拟广播事件</td>
+</tr>
+<tr>
+<td>pm list packages</td>
+<td>获取设备apk包名列表</td>
+</tr>
+<tr>
+<td>pm install -r -d [package_name]</td>
+<td>覆盖、降版本安装，-r,-d参数看情况使用即可</td>
+</tr>
+<tr>
+<td>pm uninstall [package_name]</td>
+<td>卸载应用</td>
+</tr>
+<tr>
+<td>pm path [package_name]</td>
+<td>获取应用的安装路径</td>
+</tr>
+<tr>
+<td>pm clear [package_name]</td>
+<td>清除应用缓存</td>
+</tr>
+<tr>
+<td>killall [process_name]</td>
+<td>根据进程名杀死应用</td>
+</tr>
+<tr>
+<td>kill [process_id]</td>
+<td>根据进程ID杀死应用，通常需要通过ps再grep出目标进程ID</td>
+</tr>
+<tr>
+<td>input text [content]</td>
+<td>文本输入</td>
+</tr>
+<tr>
+<td>input keyevent [keycode]</td>
+<td>模拟按键事件</td>
+</tr>
+<tr>
+<td>input tap [x] [y]</td>
+<td>模拟点击事件</td>
+</tr>
+<tr>
+<td>top</td>
+<td>主要用于查看当前系统各个进程cpu的占用情况</td>
+</tr>
+<tr>
+<td>logcat -s [tag_name]</td>
+<td>过滤某个tag的所有日志</td>
+</tr>
+<tr>
+<td>logcat -v [format]</td>
+<td>格式化输出日志</td>
+</tr>
+<tr>
+<td>dumpsys activity</td>
+<td>获取AMS服务相关信息</td>
+</tr>
+<tr>
+<td>dumpsys meminfo</td>
+<td>获取内存使用情况</td>
+</tr>
+<tr>
+<td>dumpsys cpuinfo</td>
+<td>获取CPU使用情况</td>
+</tr>
+<tr>
+<td>mount</td>
+<td>在有root权限下挂载系统分区，获取系统分区的读写权限</td>
+</tr>
+<tr>
+<td>screencap filename filepath</td>
+<td>截屏</td>
+</tr>
+</tbody></table>
+<h2 id="二、命令使用场景举例"><a href="#二、命令使用场景举例" class="headerlink" title="二、命令使用场景举例"></a>二、命令使用场景举例</h2><h5 id="1-分析定位问题-打印activity堆栈"><a href="#1-分析定位问题-打印activity堆栈" class="headerlink" title="1.分析定位问题 - 打印activity堆栈"></a>1.分析定位问题 - 打印activity堆栈</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpsys activity activities | grep -i activityrecord </span><br></pre></td></tr></table></figure>
+
+<h5 id="2-分析定位问题-查看当前前台应用activity信息"><a href="#2-分析定位问题-查看当前前台应用activity信息" class="headerlink" title="2.分析定位问题 - 查看当前前台应用activity信息"></a>2.分析定位问题 - 查看当前前台应用activity信息</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpsys activity | grep mFocus</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-分析定位问题-查看当前前台窗口"><a href="#3-分析定位问题-查看当前前台窗口" class="headerlink" title="3.分析定位问题 - 查看当前前台窗口"></a>3.分析定位问题 - 查看当前前台窗口</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpsys window | grep mFocus</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-快速获取apk安装路径、版本"><a href="#4-快速获取apk安装路径、版本" class="headerlink" title="4.快速获取apk安装路径、版本"></a>4.快速获取apk安装路径、版本</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpsys package [package_name] | grep -e codePath -e version</span><br></pre></td></tr></table></figure>
+
+<h5 id="5-分析定位问题-按关键字快速过滤logcat日志"><a href="#5-分析定位问题-按关键字快速过滤logcat日志" class="headerlink" title="5.分析定位问题 - 按关键字快速过滤logcat日志"></a>5.分析定位问题 - 按关键字快速过滤logcat日志</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logcat -vthreadtime | grep -e [str1] -e [str2] ...</span><br></pre></td></tr></table></figure>
+<h5 id="6-分析定位问题-过滤logcat里头的crash日志，有两种方式"><a href="#6-分析定位问题-过滤logcat里头的crash日志，有两种方式" class="headerlink" title="6.分析定位问题 - 过滤logcat里头的crash日志，有两种方式"></a>6.分析定位问题 - 过滤logcat里头的crash日志，有两种方式</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">logcat *:E &gt; ./log.txt</span><br><span class="line">logcat -s AndroidRuntime &gt; ./log.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、关于命令的一些补充"><a href="#三、关于命令的一些补充" class="headerlink" title="三、关于命令的一些补充"></a>三、关于命令的一些补充</h2><h5 id="1-logcat命令"><a href="#1-logcat命令" class="headerlink" title="1.logcat命令"></a>1.logcat命令</h5><p>关于<code>logcat -v</code>format的参数，有：</p>
+<ul>
+<li>brief（默认)</li>
+<li>process（仅显示进程PID）</li>
+<li>thread（显示进程，线程，优先级，标记）</li>
+<li>time（显示日期，调用时间，优先级、标记，PID）</li>
+</ul>
+<p>虽然平时分析日志定位问题时，用Android Studio就可以查看各种日志，但在熟悉logcat命令之后，就可以在终端更快速的获取自己想要的日志，并将日志保存到本地。</p>
+<p>当然，有时我们还需要获取系统相关的日志，要了解更多信息，可参考：</p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/studio/command-line/logcat">Android logcat 命令行工具</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bluestorm/p/9188159.html">Android 抓取系统各功能日志</a></p>
+<h5 id="2-dumpsys命令"><a href="#2-dumpsys命令" class="headerlink" title="2.dumpsys命令"></a>2.dumpsys命令</h5><p>dumpsys命令可以打印的信息很多，想了解dumpsys命令支持哪些功能，可以使用如下命令获取：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpsys -l</span><br></pre></td></tr></table></figure>
+
+<p>打印结果如下（只列出了部分）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">DockObserver</span><br><span class="line">SurfaceFlinger</span><br><span class="line">accessibility</span><br><span class="line">account</span><br><span class="line">activity</span><br><span class="line">alarm</span><br><span class="line">android.security.keystore</span><br><span class="line">appops</span><br><span class="line">appwidget</span><br><span class="line">audio</span><br><span class="line">backup</span><br><span class="line">battery</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-mount命令"><a href="#3-mount命令" class="headerlink" title="3.mount命令"></a>3.mount命令</h5><p>学习framework层的知识点，有时想实操修改下Android设备系统里头系统分区的东西，但手头又没有root权限的设备。这里可以使用Android模拟器，然后通过mount命令来获取系统分区的读写权限，命令执行如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adb connect [ip]</span><br><span class="line">adb root</span><br><span class="line">adb remount</span><br><span class="line">adb shell</span><br></pre></td></tr></table></figure>
+<p>或者进到shell模式后，只挂载某个系统分区，比如system分区、vendor，可以执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mount -o rw,remount /system</span><br><span class="line">mount -o rw,remount /vendor</span><br></pre></td></tr></table></figure>
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zengfw.github.io/2020/07/03/Shell%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9C%BA%E6%99%AF%E7%9A%84%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.jpg">
+      <meta itemprop="name" content="曾繁伟">
+      <meta itemprop="description" content="懂一点编程...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="神秘河流">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/03/Shell%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9C%BA%E6%99%AF%E7%9A%84%E5%BA%94%E7%94%A8/" class="post-title-link" itemprop="url">Shell自动化场景的应用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-03 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-03T00:00:00+08:00">2020-07-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-16 23:33:11" itemprop="dateModified" datetime="2021-06-16T23:33:11+08:00">2021-06-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="场景一：Git代码自动更新"><a href="#场景一：Git代码自动更新" class="headerlink" title="场景一：Git代码自动更新"></a>场景一：Git代码自动更新</h2><blockquote>
+<p>背景描述：工作中，我们电脑或多或少很多个工程 <code>git pull</code> 可能是你开启电脑开始一天工作的第一个命令行，有时候你需要切换好几个工程，每个工程又得 <code>git pull</code> 更新一下。</p>
+</blockquote>
+<p>我们都知道shell每次启动时会重新载入.bashrc（因为我的Mac是用zsh，所以是.zshrc，为了名字通用，我们都先统一叫bashrc吧。。。），bashrc文件一般放在/home/linux用户名下，我们可以在里头添加函数实现代码的自动更新，代码打个样：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> auto_pull_project &#123;</span><br><span class="line">    project_list=`ls /Users/your_root/AndroidStudioProjects`</span><br><span class="line">    <span class="keyword">for</span> project_item <span class="keyword">in</span> <span class="variable">$project_list</span></span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;[START] Update project <span class="variable">$project_item</span>&quot;</span></span><br><span class="line">        <span class="built_in">cd</span> /Users/your_root/AndroidStudioProjects/<span class="variable">$project_item</span></span><br><span class="line">        git pull -p</span><br><span class="line">        <span class="built_in">cd</span> ..</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;[END] Update project <span class="variable">$project_item</span>&quot;</span></span><br><span class="line">    <span class="keyword">done</span>    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">auto_pull_project</span><br></pre></td></tr></table></figure>
+
+<h2 id="场景二：Apk性能监控"><a href="#场景二：Apk性能监控" class="headerlink" title="场景二：Apk性能监控"></a>场景二：Apk性能监控</h2><blockquote>
+<p>背景描述：冷启动时间、内存、cpu、帧率，是不是每次通过Android Studio或者其它第三方工具进行数据采样呢？但是这样有无发现一个问题？电脑变卡了，烫了，散热器异常繁忙了，因为工具太重了。想轻量级捞取这些数据，可以通过如下面命令，收集相关维度的数据，然后对数据进行批处理，再根据你要统计的性能指标维度，输出想要的呈现方式，比如：<strong>以图表的方式，excel的方式，简单文本提示的方式等等。</strong></p>
+</blockquote>
+<p>下面就用冷启动时间统计维度打个样吧，指标：冷启动平均时长、最大启动时长、最快启动时长</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!bin/bash</span></span><br><span class="line"></span><br><span class="line">LOG_START_TIME=/Users/cengfanwei/Desktop/start_time.txt</span><br><span class="line">PACKAGE_NAME=<span class="variable">$1</span></span><br><span class="line">ACTIVITY_NAME=<span class="variable">$2</span></span><br><span class="line">TEST_TIME=<span class="variable">$3</span></span><br><span class="line"></span><br><span class="line">counter=0</span><br><span class="line"><span class="keyword">while</span> [[ <span class="variable">$counter</span> -lt <span class="variable">$TEST_TIME</span> ]]</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    adb shell am start -W -n <span class="variable">$PACKAGE_NAME</span>/.<span class="variable">$ACTIVITY_NAME</span> &gt;&gt; <span class="variable">$LOG_START_TIME</span></span><br><span class="line">    adb shell am force-stop <span class="variable">$PACKAGE_NAME</span></span><br><span class="line">    sleep 1</span><br><span class="line">    <span class="built_in">let</span> counter++</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">ALL_TOTAL_TIME=0</span><br><span class="line">MAX_START_TIME=0</span><br><span class="line">MIN_START_TIME=0</span><br><span class="line"></span><br><span class="line">time_list=`cat <span class="variable">$LOG_START_TIME</span> | grep TotalTime`</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> time_item <span class="keyword">in</span> <span class="variable">$time_list</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    t0=`<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$time_item</span>&quot;</span> | tr -<span class="built_in">cd</span> <span class="string">&quot;[0-9]&quot;</span>`</span><br><span class="line">    <span class="built_in">let</span> ALL_TOTAL_TIME+=t0</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$MAX_START_TIME</span> -lt <span class="variable">$t0</span> ]]; <span class="keyword">then</span></span><br><span class="line">        MAX_START_TIME=<span class="variable">$t0</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$MIN_START_TIME</span> -eq 0 || <span class="variable">$MIN_START_TIME</span> -gt <span class="variable">$t0</span> ]]; <span class="keyword">then</span></span><br><span class="line">        MIN_START_TIME=<span class="variable">$t0</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">avg_time=`<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$ALL_TOTAL_TIME</span> / <span class="variable">$TEST_TIME</span>&quot;</span> | bc`</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;avg_time: <span class="variable">$avg_time</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;max_time: <span class="variable">$MAX_START_TIME</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;min_time: <span class="variable">$MIN_START_TIME</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><em>然后我们终端跑下（第一个参数是包名，第二个是启动的MainActivity，第三个是统计次数）：</em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sh /Users/cengfanwei/Desktop/start_time.sh [package_name] [launch_activity] 5</span><br><span class="line">avg_time: 459</span><br><span class="line">max_time: 565</span><br><span class="line">min_time: 434</span><br></pre></td></tr></table></figure>
+
+<p>好啦，以上就是关于冷启动指标数据收集的方式，可能你会有疑问，那我们平时的app冷启动时间这么统计并不准呢？</p>
+<p>这里我想说的是，重要的是这个思想，比如你的app的冷启动流程是先经过SplashActivity再到HomeActivity，那你可以选择HomeActivity相对比较适合产品的埋点位置，然后添加日志，假设在HomeActivity的onCreate的第一行代码埋点日志<code>Log.d(&quot;ZFW&quot;, &quot;onCreate.&quot;)</code>那就可以在脚本里头添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell logcat -s ZFW</span><br><span class="line"></span><br><span class="line">04-26 12:17:43.478  1266  1442 D ZFW: onCreate.</span><br></pre></td></tr></table></figure>
+
+<p>最后，再通过拿到你要的logcat日志对时间进行文本批处理统计即。 ^_^ </p>
+<p><strong>在上面的冷启动指标时长统计代码打样后，我们想统计其它维度指标也就一个思想道理了。</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印应用Activity堆栈信息</span></span><br><span class="line">adb shell dumpsys activity [package] &gt; dumpsys_activity.txt</span><br><span class="line"><span class="comment"># 打印应用内存使用信息</span></span><br><span class="line">adb shell dumpsys meminfo [package] &gt; dumpsys_meminfo.txt</span><br><span class="line"><span class="comment"># 打印应用CPU使用情况</span></span><br><span class="line">adb shell dumpsys cpuinfo [package] &gt; dumpsys_cpuinfo.txt</span><br></pre></td></tr></table></figure>
+
+<p><em>关于场景二，你可能不得不去补一下adb常用命令，以及一些系统命令工具，比如dumpsys相关的命令就很多啦~</em></p>
+<h2 id="场景三：Apk自动编译、安装到设备"><a href="#场景三：Apk自动编译、安装到设备" class="headerlink" title="场景三：Apk自动编译、安装到设备"></a>场景三：Apk自动编译、安装到设备</h2><blockquote>
+<p>背景描述：电脑的项目本地临时编译一个release带签名的apk再安装到设备上调试，也是我们比较常见的繁琐场景。</p>
+</blockquote>
+<p>步骤一般是：</p>
+<ol>
+<li>配置gradle的签名信息（当然也可以把apk构建出来之后再通过 <code>jarsigner</code>）</li>
+<li>AndroidStudio build一下</li>
+<li>把apk安装到设备上</li>
+</ol>
+<p>通过写个脚本，只要输入ip，以及项目路径，我们即可全自动化完成这个流程步骤，你倒杯茶回来就可以直接开始调试了，代码打个样（伪代码，需要自行补充细节）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">function</span> auto_build_install&#123;</span><br><span class="line">	<span class="comment"># 1.通过adb的方式连接设备IP</span></span><br><span class="line">	adb connect <span class="variable">$1</span></span><br><span class="line">	<span class="comment"># 2.通过cd到项目目录位置</span></span><br><span class="line">	<span class="built_in">cd</span> <span class="variable">$2</span></span><br><span class="line">	<span class="comment"># 3.执行gradle命令自动构建apk</span></span><br><span class="line">	~/Library/Android/gradle/gradle-4.10.1/bin/gradle build assembleRelease</span><br><span class="line">	<span class="comment"># 4.通过jarsigner命令对output目录下的release apk进行签名</span></span><br><span class="line">	jarsigner output/release_unsign.apk...</span><br><span class="line">	<span class="comment"># 5.安装到设备上面</span></span><br><span class="line">	adb shell pm install -r -d apk_path</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">auto_build_install <span class="variable">$ip</span> <span class="variable">$project_path</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>BY THE WAY……</strong></p>
+</blockquote>
+<p><strong>shell脚本的应用场景还有很多很多，也请记住，它不是一个人在战斗，它往往是多个命令工具的组合，脚本可能包含python、jdk的工具命令，gradle命令等等。</strong></p>
+<p><strong>当然，最最最重要的一点就是：牢记自动化的思想，优化日常工作的一些繁琐、重复流程，将精力放到刀刃上~</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zengfw.github.io/2020/06/23/Shell%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.jpg">
+      <meta itemprop="name" content="曾繁伟">
+      <meta itemprop="description" content="懂一点编程...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="神秘河流">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/23/Shell%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6/" class="post-title-link" itemprop="url">Shell自定义输入/输出文件描述符</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-23 00:00:00" itemprop="dateCreated datePublished" datetime="2020-06-23T00:00:00+08:00">2020-06-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-16 23:33:01" itemprop="dateModified" datetime="2021-06-16T23:33:01+08:00">2021-06-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="一、标准文件描述符"><a href="#一、标准文件描述符" class="headerlink" title="一、标准文件描述符"></a>一、标准文件描述符</h2><blockquote>
+<p>我们知道shell脚本日志输出的方式有两种：</p>
+</blockquote>
+<ul>
+<li>在显示器屏幕上显示输出</li>
+<li>将输出重定向到文件中</li>
+</ul>
+<p>Linxu系统将每个对象当作文件处理，这包括输入和输出进程。Linux用文件描述符（file descriptor）来标识每个文件对象。文件描述符是一个非负整数，可以唯一标识会话中打开的文件。shell保留了3个标准文件描述符：0，1，2，如下列表所示：</p>
+<table>
+<thead>
+<tr>
+<th>文件描述符</th>
+<th>缩写</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>STDIN</td>
+<td>标准输入</td>
+</tr>
+<tr>
+<td>1</td>
+<td>STDOUT</td>
+<td>标准输出</td>
+</tr>
+<tr>
+<td>2</td>
+<td>STRERR</td>
+<td>标准错误</td>
+</tr>
+</tbody></table>
+<h3 id="1-1-标准输入"><a href="#1-1-标准输入" class="headerlink" title="1.1 标准输入"></a>1.1 标准输入</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.常规普通使用方式</span></span><br><span class="line">$ cat &lt; testfile</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.通过添加文件描述符使用STDIN</span></span><br><span class="line">$ cat 0&lt; testfile</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="1-2-标准输出"><a href="#1-2-标准输出" class="headerlink" title="1.2 标准输出"></a>1.2 标准输出</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.常规普通使用方式</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;zfw...&quot;</span> &gt; testfile</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.通过添加文件描述符使用STDOUT</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;zfw...&quot;</span> 1&gt; testfile </span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-标准错误输出"><a href="#1-3-标准错误输出" class="headerlink" title="1.3 标准错误输出"></a>1.3 标准错误输出</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过添加文件描述符使用STDERR</span></span><br><span class="line">$ ls -al xxx 2&gt; testfile</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-标准输出、标准错误输出重定向到不同位置文件"><a href="#1-4-标准输出、标准错误输出重定向到不同位置文件" class="headerlink" title="1.4 标准输出、标准错误输出重定向到不同位置文件"></a>1.4 标准输出、标准错误输出重定向到不同位置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls -al asdfasdf 1&gt; testfile1 2&gt; testfile2</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-标准输出、标准错误输出重定向到同个位置文件（使用特殊的重定向符号-amp-gt-）"><a href="#1-5-标准输出、标准错误输出重定向到同个位置文件（使用特殊的重定向符号-amp-gt-）" class="headerlink" title="1.5 标准输出、标准错误输出重定向到同个位置文件（使用特殊的重定向符号&amp;&gt;）"></a>1.5 标准输出、标准错误输出重定向到同个位置文件（使用特殊的重定向符号&amp;&gt;）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls -al xxx &amp;&gt; testfile</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="二、重定向输出和输入"><a href="#二、重定向输出和输入" class="headerlink" title="二、重定向输出和输入"></a>二、重定向输出和输入</h2><h3 id="2-1-在脚本中重定向输出"><a href="#2-1-在脚本中重定向输出" class="headerlink" title="2.1 在脚本中重定向输出"></a>2.1 在脚本中重定向输出</h3><p>通过exec命令使shell在脚本执行期间将日志重定向某个特定文件描述符</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">exec</span> 1&gt; testfile</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;11&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;22&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;33&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>在命令行执行脚本文件结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sh test.sh</span><br><span class="line">$ cat testfile</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>exec命令会启动一个新shell进程并将STDOUT文件描述符重定向到文件，脚本中发给STDOUT的所有输出会被重定向到文件。</p>
+</blockquote>
+<h3 id="2-2-在脚本中重定向输入"><a href="#2-2-在脚本中重定向输入" class="headerlink" title="2.2 在脚本中重定向输入"></a>2.2 在脚本中重定向输入</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这个命令会告诉shell它应该从文件testfile中获得输入，而不是STDIN</span></span><br><span class="line">$ <span class="built_in">exec</span> 0&lt; testfile</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、自定义输入、输出文件描述符重定向"><a href="#三、自定义输入、输出文件描述符重定向" class="headerlink" title="三、自定义输入、输出文件描述符重定向"></a>三、自定义输入、输出文件描述符重定向</h2><blockquote>
+<p>在脚本中重定向输入和输出时，并不局限于这3个默认的文件描述符。shell中最多可以有9个打开的文件描述符，其它6个从3~8的文件描述符均可用作输入或输出重定向，你可以将这些文件描述符中的任意一个分配给文件，然后在脚本中使用它们。</p>
+</blockquote>
+<h3 id="3-1-创建输出文件描述符"><a href="#3-1-创建输出文件描述符" class="headerlink" title="3.1 创建输出文件描述符"></a>3.1 创建输出文件描述符</h3><p>通过exec命令来给输出分配文件描述符</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">exec</span> 3&gt; /Users/cengfanwei/Desktop/temp</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;11&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;22&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;33&quot;</span> &gt;&amp;3</span><br></pre></td></tr></table></figure>
+
+<p>在命令行执行脚本文件结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sh test.sh</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">$ cat testfile</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>脚本用exec命令将文件描述符3重定向到另一个文件。当脚本执行echo语句时，输出内容会像预想中那样显示在STDOUT上。但你重定向到文件描述符3的那行echo语句的输出却进入了另一个文件。</p>
+</blockquote>
+<h3 id="3-2-创建输入文件描述符"><a href="#3-2-创建输入文件描述符" class="headerlink" title="3.2 创建输入文件描述符"></a>3.2 创建输入文件描述符</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">exec</span> 6&lt; /Users/cengfanwei/Desktop/temp</span><br><span class="line"><span class="built_in">exec</span> 0&lt;&amp;6</span><br><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> line</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Read line: <span class="variable">$line</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-创建输入输出文件描述符"><a href="#3-3-创建输入输出文件描述符" class="headerlink" title="3.3 创建输入输出文件描述符"></a>3.3 创建输入输出文件描述符</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> 6&lt;&gt; /Users/cengfanwei/Desktop/temp</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> line &lt;&amp;6</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Read operation: <span class="variable">$line</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Write operation...&quot;</span> &gt;&amp;6</span><br></pre></td></tr></table></figure>
+
+<p>在命令行执行脚本文件结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ sh test.sh</span><br><span class="line">Read operation: Hello world 1!</span><br><span class="line">Read operation: Hello world 2!</span><br><span class="line"></span><br><span class="line">$ cat temp</span><br><span class="line">Hello world 1!</span><br><span class="line">Hello world 2!</span><br><span class="line">Hello world 3!Write operation...</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-关闭文件描述符"><a href="#3-4-关闭文件描述符" class="headerlink" title="3.4 关闭文件描述符"></a>3.4 关闭文件描述符</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> 6&gt; /Users/cengfanwei/Desktop/temp</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Test close file descriptor...&quot;</span> &gt;&amp;6</span><br><span class="line"><span class="built_in">exec</span> 6&gt;&amp;-</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Contine writing...&quot;</span> &gt;&amp;6</span><br></pre></td></tr></table></figure>
+
+<p>在命令行执行脚本结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sh test.sh</span><br><span class="line">test.sh: line 6: 6: Bad file descriptor</span><br><span class="line"></span><br><span class="line">$ cat temp</span><br><span class="line">Test close file descriptor...</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="曾繁伟"
+      src="/images/author.jpg">
+  <p class="site-author-name" itemprop="name">曾繁伟</p>
+  <div class="site-description" itemprop="description">懂一点编程...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zengfw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zengfw" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">曾繁伟</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

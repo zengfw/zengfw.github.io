@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zengfw.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="场景一：Git代码自动更新 背景描述：工作中，我们电脑或多或少很多个工程 git pull 可能是你开启电脑开始一天工作的第一个命令行，有时候你需要切换好几个工程，每个工程又得 git pull 更新一下。  我们都知道shell每次启动时会重新载入.bashrc（因为我的Mac是用zsh，所以是.zshrc，为了名字通用，我们都先统一叫bashrc吧。。。），bashrc文件一般放在&#x2F;home&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell自动化场景的应用">
+<meta property="og:url" content="https://zengfw.github.io/2020/07/03/Shell%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9C%BA%E6%99%AF%E7%9A%84%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="神秘河流">
+<meta property="og:description" content="场景一：Git代码自动更新 背景描述：工作中，我们电脑或多或少很多个工程 git pull 可能是你开启电脑开始一天工作的第一个命令行，有时候你需要切换好几个工程，每个工程又得 git pull 更新一下。  我们都知道shell每次启动时会重新载入.bashrc（因为我的Mac是用zsh，所以是.zshrc，为了名字通用，我们都先统一叫bashrc吧。。。），bashrc文件一般放在&#x2F;home&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-06-16T15:33:11.718Z">
+<meta property="article:author" content="曾繁伟">
+<meta property="article:tag" content="Android,Shell,Kotlin,Java">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zengfw.github.io/2020/07/03/Shell%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9C%BA%E6%99%AF%E7%9A%84%E5%BA%94%E7%94%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Shell自动化场景的应用 | 神秘河流</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">神秘河流</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zengfw" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zengfw.github.io/2020/07/03/Shell%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9C%BA%E6%99%AF%E7%9A%84%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.jpg">
+      <meta itemprop="name" content="曾繁伟">
+      <meta itemprop="description" content="懂一点编程...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="神秘河流">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Shell自动化场景的应用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-03 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-03T00:00:00+08:00">2020-07-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-16 23:33:11" itemprop="dateModified" datetime="2021-06-16T23:33:11+08:00">2021-06-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="场景一：Git代码自动更新"><a href="#场景一：Git代码自动更新" class="headerlink" title="场景一：Git代码自动更新"></a>场景一：Git代码自动更新</h2><blockquote>
+<p>背景描述：工作中，我们电脑或多或少很多个工程 <code>git pull</code> 可能是你开启电脑开始一天工作的第一个命令行，有时候你需要切换好几个工程，每个工程又得 <code>git pull</code> 更新一下。</p>
+</blockquote>
+<p>我们都知道shell每次启动时会重新载入.bashrc（因为我的Mac是用zsh，所以是.zshrc，为了名字通用，我们都先统一叫bashrc吧。。。），bashrc文件一般放在/home/linux用户名下，我们可以在里头添加函数实现代码的自动更新，代码打个样：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> auto_pull_project &#123;</span><br><span class="line">    project_list=`ls /Users/your_root/AndroidStudioProjects`</span><br><span class="line">    <span class="keyword">for</span> project_item <span class="keyword">in</span> <span class="variable">$project_list</span></span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;[START] Update project <span class="variable">$project_item</span>&quot;</span></span><br><span class="line">        <span class="built_in">cd</span> /Users/your_root/AndroidStudioProjects/<span class="variable">$project_item</span></span><br><span class="line">        git pull -p</span><br><span class="line">        <span class="built_in">cd</span> ..</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;[END] Update project <span class="variable">$project_item</span>&quot;</span></span><br><span class="line">    <span class="keyword">done</span>    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">auto_pull_project</span><br></pre></td></tr></table></figure>
+
+<h2 id="场景二：Apk性能监控"><a href="#场景二：Apk性能监控" class="headerlink" title="场景二：Apk性能监控"></a>场景二：Apk性能监控</h2><blockquote>
+<p>背景描述：冷启动时间、内存、cpu、帧率，是不是每次通过Android Studio或者其它第三方工具进行数据采样呢？但是这样有无发现一个问题？电脑变卡了，烫了，散热器异常繁忙了，因为工具太重了。想轻量级捞取这些数据，可以通过如下面命令，收集相关维度的数据，然后对数据进行批处理，再根据你要统计的性能指标维度，输出想要的呈现方式，比如：<strong>以图表的方式，excel的方式，简单文本提示的方式等等。</strong></p>
+</blockquote>
+<p>下面就用冷启动时间统计维度打个样吧，指标：冷启动平均时长、最大启动时长、最快启动时长</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!bin/bash</span></span><br><span class="line"></span><br><span class="line">LOG_START_TIME=/Users/cengfanwei/Desktop/start_time.txt</span><br><span class="line">PACKAGE_NAME=<span class="variable">$1</span></span><br><span class="line">ACTIVITY_NAME=<span class="variable">$2</span></span><br><span class="line">TEST_TIME=<span class="variable">$3</span></span><br><span class="line"></span><br><span class="line">counter=0</span><br><span class="line"><span class="keyword">while</span> [[ <span class="variable">$counter</span> -lt <span class="variable">$TEST_TIME</span> ]]</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    adb shell am start -W -n <span class="variable">$PACKAGE_NAME</span>/.<span class="variable">$ACTIVITY_NAME</span> &gt;&gt; <span class="variable">$LOG_START_TIME</span></span><br><span class="line">    adb shell am force-stop <span class="variable">$PACKAGE_NAME</span></span><br><span class="line">    sleep 1</span><br><span class="line">    <span class="built_in">let</span> counter++</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">ALL_TOTAL_TIME=0</span><br><span class="line">MAX_START_TIME=0</span><br><span class="line">MIN_START_TIME=0</span><br><span class="line"></span><br><span class="line">time_list=`cat <span class="variable">$LOG_START_TIME</span> | grep TotalTime`</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> time_item <span class="keyword">in</span> <span class="variable">$time_list</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    t0=`<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$time_item</span>&quot;</span> | tr -<span class="built_in">cd</span> <span class="string">&quot;[0-9]&quot;</span>`</span><br><span class="line">    <span class="built_in">let</span> ALL_TOTAL_TIME+=t0</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$MAX_START_TIME</span> -lt <span class="variable">$t0</span> ]]; <span class="keyword">then</span></span><br><span class="line">        MAX_START_TIME=<span class="variable">$t0</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$MIN_START_TIME</span> -eq 0 || <span class="variable">$MIN_START_TIME</span> -gt <span class="variable">$t0</span> ]]; <span class="keyword">then</span></span><br><span class="line">        MIN_START_TIME=<span class="variable">$t0</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line">avg_time=`<span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$ALL_TOTAL_TIME</span> / <span class="variable">$TEST_TIME</span>&quot;</span> | bc`</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;avg_time: <span class="variable">$avg_time</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;max_time: <span class="variable">$MAX_START_TIME</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;min_time: <span class="variable">$MIN_START_TIME</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><em>然后我们终端跑下（第一个参数是包名，第二个是启动的MainActivity，第三个是统计次数）：</em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sh /Users/cengfanwei/Desktop/start_time.sh [package_name] [launch_activity] 5</span><br><span class="line">avg_time: 459</span><br><span class="line">max_time: 565</span><br><span class="line">min_time: 434</span><br></pre></td></tr></table></figure>
+
+<p>好啦，以上就是关于冷启动指标数据收集的方式，可能你会有疑问，那我们平时的app冷启动时间这么统计并不准呢？</p>
+<p>这里我想说的是，重要的是这个思想，比如你的app的冷启动流程是先经过SplashActivity再到HomeActivity，那你可以选择HomeActivity相对比较适合产品的埋点位置，然后添加日志，假设在HomeActivity的onCreate的第一行代码埋点日志<code>Log.d(&quot;ZFW&quot;, &quot;onCreate.&quot;)</code>那就可以在脚本里头添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">adb shell logcat -s ZFW</span><br><span class="line"></span><br><span class="line">04-26 12:17:43.478  1266  1442 D ZFW: onCreate.</span><br></pre></td></tr></table></figure>
+
+<p>最后，再通过拿到你要的logcat日志对时间进行文本批处理统计即。 ^_^ </p>
+<p><strong>在上面的冷启动指标时长统计代码打样后，我们想统计其它维度指标也就一个思想道理了。</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打印应用Activity堆栈信息</span></span><br><span class="line">adb shell dumpsys activity [package] &gt; dumpsys_activity.txt</span><br><span class="line"><span class="comment"># 打印应用内存使用信息</span></span><br><span class="line">adb shell dumpsys meminfo [package] &gt; dumpsys_meminfo.txt</span><br><span class="line"><span class="comment"># 打印应用CPU使用情况</span></span><br><span class="line">adb shell dumpsys cpuinfo [package] &gt; dumpsys_cpuinfo.txt</span><br></pre></td></tr></table></figure>
+
+<p><em>关于场景二，你可能不得不去补一下adb常用命令，以及一些系统命令工具，比如dumpsys相关的命令就很多啦~</em></p>
+<h2 id="场景三：Apk自动编译、安装到设备"><a href="#场景三：Apk自动编译、安装到设备" class="headerlink" title="场景三：Apk自动编译、安装到设备"></a>场景三：Apk自动编译、安装到设备</h2><blockquote>
+<p>背景描述：电脑的项目本地临时编译一个release带签名的apk再安装到设备上调试，也是我们比较常见的繁琐场景。</p>
+</blockquote>
+<p>步骤一般是：</p>
+<ol>
+<li>配置gradle的签名信息（当然也可以把apk构建出来之后再通过 <code>jarsigner</code>）</li>
+<li>AndroidStudio build一下</li>
+<li>把apk安装到设备上</li>
+</ol>
+<p>通过写个脚本，只要输入ip，以及项目路径，我们即可全自动化完成这个流程步骤，你倒杯茶回来就可以直接开始调试了，代码打个样（伪代码，需要自行补充细节）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">function</span> auto_build_install&#123;</span><br><span class="line">	<span class="comment"># 1.通过adb的方式连接设备IP</span></span><br><span class="line">	adb connect <span class="variable">$1</span></span><br><span class="line">	<span class="comment"># 2.通过cd到项目目录位置</span></span><br><span class="line">	<span class="built_in">cd</span> <span class="variable">$2</span></span><br><span class="line">	<span class="comment"># 3.执行gradle命令自动构建apk</span></span><br><span class="line">	~/Library/Android/gradle/gradle-4.10.1/bin/gradle build assembleRelease</span><br><span class="line">	<span class="comment"># 4.通过jarsigner命令对output目录下的release apk进行签名</span></span><br><span class="line">	jarsigner output/release_unsign.apk...</span><br><span class="line">	<span class="comment"># 5.安装到设备上面</span></span><br><span class="line">	adb shell pm install -r -d apk_path</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">auto_build_install <span class="variable">$ip</span> <span class="variable">$project_path</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p><strong>BY THE WAY……</strong></p>
+</blockquote>
+<p><strong>shell脚本的应用场景还有很多很多，也请记住，它不是一个人在战斗，它往往是多个命令工具的组合，脚本可能包含python、jdk的工具命令，gradle命令等等。</strong></p>
+<p><strong>当然，最最最重要的一点就是：牢记自动化的思想，优化日常工作的一些繁琐、重复流程，将精力放到刀刃上~</strong></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>曾繁伟
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://zengfw.github.io/2020/07/03/Shell%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9C%BA%E6%99%AF%E7%9A%84%E5%BA%94%E7%94%A8/" title="Shell自动化场景的应用">https://zengfw.github.io/2020/07/03/Shell自动化场景的应用/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/23/Shell%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6/" rel="prev" title="Shell自定义输入/输出文件描述符">
+      <i class="fa fa-chevron-left"></i> Shell自定义输入/输出文件描述符
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/25/Shell%E6%A8%A1%E5%BC%8F%E5%B8%B8%E7%94%A8Android%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4/" rel="next" title="Shell模式常用Android调试命令">
+      Shell模式常用Android调试命令 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%80%EF%BC%9AGit%E4%BB%A3%E7%A0%81%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0"><span class="nav-text">场景一：Git代码自动更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%BA%8C%EF%BC%9AApk%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7"><span class="nav-text">场景二：Apk性能监控</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%89%EF%BC%9AApk%E8%87%AA%E5%8A%A8%E7%BC%96%E8%AF%91%E3%80%81%E5%AE%89%E8%A3%85%E5%88%B0%E8%AE%BE%E5%A4%87"><span class="nav-text">场景三：Apk自动编译、安装到设备</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="曾繁伟"
+      src="/images/author.jpg">
+  <p class="site-author-name" itemprop="name">曾繁伟</p>
+  <div class="site-description" itemprop="description">懂一点编程...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zengfw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zengfw" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">曾繁伟</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

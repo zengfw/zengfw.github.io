@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zengfw.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、常用命令列表   命令 描述    am start -n [package_name]&#x2F;.[activity_name] 通过具体activity启动应用   am start -a [action] -d [uri] 通过action、uri启动应用   am start [package_name] 通过包名启动应用   am startservice -n [package_name]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell模式常用Android调试命令">
+<meta property="og:url" content="https://zengfw.github.io/2020/07/25/Shell%E6%A8%A1%E5%BC%8F%E5%B8%B8%E7%94%A8Android%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4/index.html">
+<meta property="og:site_name" content="神秘河流">
+<meta property="og:description" content="一、常用命令列表   命令 描述    am start -n [package_name]&#x2F;.[activity_name] 通过具体activity启动应用   am start -a [action] -d [uri] 通过action、uri启动应用   am start [package_name] 通过包名启动应用   am startservice -n [package_name]">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-06-16T15:33:24.914Z">
+<meta property="article:author" content="曾繁伟">
+<meta property="article:tag" content="Android,Shell,Kotlin,Java">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://zengfw.github.io/2020/07/25/Shell%E6%A8%A1%E5%BC%8F%E5%B8%B8%E7%94%A8Android%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Shell模式常用Android调试命令 | 神秘河流</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">神秘河流</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>目录</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/zengfw" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zengfw.github.io/2020/07/25/Shell%E6%A8%A1%E5%BC%8F%E5%B8%B8%E7%94%A8Android%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.jpg">
+      <meta itemprop="name" content="曾繁伟">
+      <meta itemprop="description" content="懂一点编程...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="神秘河流">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Shell模式常用Android调试命令
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-25 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-25T00:00:00+08:00">2020-07-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-16 23:33:24" itemprop="dateModified" datetime="2021-06-16T23:33:24+08:00">2021-06-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、常用命令列表"><a href="#一、常用命令列表" class="headerlink" title="一、常用命令列表"></a>一、常用命令列表</h2><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>am start -n [package_name]/.[activity_name]</td>
+<td>通过具体activity启动应用</td>
+</tr>
+<tr>
+<td>am start -a [action] -d [uri]</td>
+<td>通过action、uri启动应用</td>
+</tr>
+<tr>
+<td>am start [package_name]</td>
+<td>通过包名启动应用</td>
+</tr>
+<tr>
+<td>am startservice -n [package_name]/.[service_name]</td>
+<td>通过具体service路径启动服务</td>
+</tr>
+<tr>
+<td>am startservice -a [action]</td>
+<td>通过action启动服务</td>
+</tr>
+<tr>
+<td>am force-stop [packageName]</td>
+<td>强制停止应用</td>
+</tr>
+<tr>
+<td>am broadcast -a [action]</td>
+<td>模拟广播事件</td>
+</tr>
+<tr>
+<td>pm list packages</td>
+<td>获取设备apk包名列表</td>
+</tr>
+<tr>
+<td>pm install -r -d [package_name]</td>
+<td>覆盖、降版本安装，-r,-d参数看情况使用即可</td>
+</tr>
+<tr>
+<td>pm uninstall [package_name]</td>
+<td>卸载应用</td>
+</tr>
+<tr>
+<td>pm path [package_name]</td>
+<td>获取应用的安装路径</td>
+</tr>
+<tr>
+<td>pm clear [package_name]</td>
+<td>清除应用缓存</td>
+</tr>
+<tr>
+<td>killall [process_name]</td>
+<td>根据进程名杀死应用</td>
+</tr>
+<tr>
+<td>kill [process_id]</td>
+<td>根据进程ID杀死应用，通常需要通过ps再grep出目标进程ID</td>
+</tr>
+<tr>
+<td>input text [content]</td>
+<td>文本输入</td>
+</tr>
+<tr>
+<td>input keyevent [keycode]</td>
+<td>模拟按键事件</td>
+</tr>
+<tr>
+<td>input tap [x] [y]</td>
+<td>模拟点击事件</td>
+</tr>
+<tr>
+<td>top</td>
+<td>主要用于查看当前系统各个进程cpu的占用情况</td>
+</tr>
+<tr>
+<td>logcat -s [tag_name]</td>
+<td>过滤某个tag的所有日志</td>
+</tr>
+<tr>
+<td>logcat -v [format]</td>
+<td>格式化输出日志</td>
+</tr>
+<tr>
+<td>dumpsys activity</td>
+<td>获取AMS服务相关信息</td>
+</tr>
+<tr>
+<td>dumpsys meminfo</td>
+<td>获取内存使用情况</td>
+</tr>
+<tr>
+<td>dumpsys cpuinfo</td>
+<td>获取CPU使用情况</td>
+</tr>
+<tr>
+<td>mount</td>
+<td>在有root权限下挂载系统分区，获取系统分区的读写权限</td>
+</tr>
+<tr>
+<td>screencap filename filepath</td>
+<td>截屏</td>
+</tr>
+</tbody></table>
+<h2 id="二、命令使用场景举例"><a href="#二、命令使用场景举例" class="headerlink" title="二、命令使用场景举例"></a>二、命令使用场景举例</h2><h5 id="1-分析定位问题-打印activity堆栈"><a href="#1-分析定位问题-打印activity堆栈" class="headerlink" title="1.分析定位问题 - 打印activity堆栈"></a>1.分析定位问题 - 打印activity堆栈</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpsys activity activities | grep -i activityrecord </span><br></pre></td></tr></table></figure>
+
+<h5 id="2-分析定位问题-查看当前前台应用activity信息"><a href="#2-分析定位问题-查看当前前台应用activity信息" class="headerlink" title="2.分析定位问题 - 查看当前前台应用activity信息"></a>2.分析定位问题 - 查看当前前台应用activity信息</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpsys activity | grep mFocus</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-分析定位问题-查看当前前台窗口"><a href="#3-分析定位问题-查看当前前台窗口" class="headerlink" title="3.分析定位问题 - 查看当前前台窗口"></a>3.分析定位问题 - 查看当前前台窗口</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpsys window | grep mFocus</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-快速获取apk安装路径、版本"><a href="#4-快速获取apk安装路径、版本" class="headerlink" title="4.快速获取apk安装路径、版本"></a>4.快速获取apk安装路径、版本</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpsys package [package_name] | grep -e codePath -e version</span><br></pre></td></tr></table></figure>
+
+<h5 id="5-分析定位问题-按关键字快速过滤logcat日志"><a href="#5-分析定位问题-按关键字快速过滤logcat日志" class="headerlink" title="5.分析定位问题 - 按关键字快速过滤logcat日志"></a>5.分析定位问题 - 按关键字快速过滤logcat日志</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logcat -vthreadtime | grep -e [str1] -e [str2] ...</span><br></pre></td></tr></table></figure>
+<h5 id="6-分析定位问题-过滤logcat里头的crash日志，有两种方式"><a href="#6-分析定位问题-过滤logcat里头的crash日志，有两种方式" class="headerlink" title="6.分析定位问题 - 过滤logcat里头的crash日志，有两种方式"></a>6.分析定位问题 - 过滤logcat里头的crash日志，有两种方式</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">logcat *:E &gt; ./log.txt</span><br><span class="line">logcat -s AndroidRuntime &gt; ./log.txt</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、关于命令的一些补充"><a href="#三、关于命令的一些补充" class="headerlink" title="三、关于命令的一些补充"></a>三、关于命令的一些补充</h2><h5 id="1-logcat命令"><a href="#1-logcat命令" class="headerlink" title="1.logcat命令"></a>1.logcat命令</h5><p>关于<code>logcat -v</code>format的参数，有：</p>
+<ul>
+<li>brief（默认)</li>
+<li>process（仅显示进程PID）</li>
+<li>thread（显示进程，线程，优先级，标记）</li>
+<li>time（显示日期，调用时间，优先级、标记，PID）</li>
+</ul>
+<p>虽然平时分析日志定位问题时，用Android Studio就可以查看各种日志，但在熟悉logcat命令之后，就可以在终端更快速的获取自己想要的日志，并将日志保存到本地。</p>
+<p>当然，有时我们还需要获取系统相关的日志，要了解更多信息，可参考：</p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/studio/command-line/logcat">Android logcat 命令行工具</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bluestorm/p/9188159.html">Android 抓取系统各功能日志</a></p>
+<h5 id="2-dumpsys命令"><a href="#2-dumpsys命令" class="headerlink" title="2.dumpsys命令"></a>2.dumpsys命令</h5><p>dumpsys命令可以打印的信息很多，想了解dumpsys命令支持哪些功能，可以使用如下命令获取：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dumpsys -l</span><br></pre></td></tr></table></figure>
+
+<p>打印结果如下（只列出了部分）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">DockObserver</span><br><span class="line">SurfaceFlinger</span><br><span class="line">accessibility</span><br><span class="line">account</span><br><span class="line">activity</span><br><span class="line">alarm</span><br><span class="line">android.security.keystore</span><br><span class="line">appops</span><br><span class="line">appwidget</span><br><span class="line">audio</span><br><span class="line">backup</span><br><span class="line">battery</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-mount命令"><a href="#3-mount命令" class="headerlink" title="3.mount命令"></a>3.mount命令</h5><p>学习framework层的知识点，有时想实操修改下Android设备系统里头系统分区的东西，但手头又没有root权限的设备。这里可以使用Android模拟器，然后通过mount命令来获取系统分区的读写权限，命令执行如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adb connect [ip]</span><br><span class="line">adb root</span><br><span class="line">adb remount</span><br><span class="line">adb shell</span><br></pre></td></tr></table></figure>
+<p>或者进到shell模式后，只挂载某个系统分区，比如system分区、vendor，可以执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mount -o rw,remount /system</span><br><span class="line">mount -o rw,remount /vendor</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>曾繁伟
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://zengfw.github.io/2020/07/25/Shell%E6%A8%A1%E5%BC%8F%E5%B8%B8%E7%94%A8Android%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4/" title="Shell模式常用Android调试命令">https://zengfw.github.io/2020/07/25/Shell模式常用Android调试命令/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/03/Shell%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9C%BA%E6%99%AF%E7%9A%84%E5%BA%94%E7%94%A8/" rel="prev" title="Shell自动化场景的应用">
+      <i class="fa fa-chevron-left"></i> Shell自动化场景的应用
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/20/Shell%E8%84%9A%E6%9C%ACgradle%E5%91%BD%E4%BB%A4%E5%92%8Cgradlew%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8C%BA%E5%88%AB/" rel="next" title="Shell工具gradle和gradlew脚本的区别">
+      Shell工具gradle和gradlew脚本的区别 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%88%97%E8%A1%A8"><span class="nav-text">一、常用命令列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%91%BD%E4%BB%A4%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%BE%E4%BE%8B"><span class="nav-text">二、命令使用场景举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%85%B3%E4%BA%8E%E5%91%BD%E4%BB%A4%E7%9A%84%E4%B8%80%E4%BA%9B%E8%A1%A5%E5%85%85"><span class="nav-text">三、关于命令的一些补充</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="曾繁伟"
+      src="/images/author.jpg">
+  <p class="site-author-name" itemprop="name">曾繁伟</p>
+  <div class="site-description" itemprop="description">懂一点编程...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zengfw" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zengfw" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">曾繁伟</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
