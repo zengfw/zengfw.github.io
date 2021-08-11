@@ -155,6 +155,207 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zengfw.github.io/2021/04/01/Gradle%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/author.jpg">
+      <meta itemprop="name" content="曾繁伟">
+      <meta itemprop="description" content="懂一点编程...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="神秘河流">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/01/Gradle%E6%9E%84%E5%BB%BA%E6%B5%81%E7%A8%8B%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA/" class="post-title-link" itemprop="url">Gradle构建流程深入浅出</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-04-01 00:00:00" itemprop="dateCreated datePublished" datetime="2021-04-01T00:00:00+08:00">2021-04-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-08-11 22:28:37" itemprop="dateModified" datetime="2021-08-11T22:28:37+08:00">2021-08-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Gradle/" itemprop="url" rel="index"><span itemprop="name">Gradle</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Gradle构建流程分三个阶段：Initialization、Configuration、Execution</p>
+<p><strong>1. 初始化</strong></p>
+<blockquote>
+<p>Gradle支持单项目和多项目构建。在初始化阶段，Gradle确定哪些项目将参与构建，并为每个项目创建一个 Project实例（根目录为rootProject，子目录的为project）。</p>
+</blockquote>
+<p><strong>2. 配置</strong></p>
+<blockquote>
+<p>这个阶段对所有项目的project对象进行配置，并执行一部分构建脚本。</p>
+</blockquote>
+<p><strong>3. 执行</strong></p>
+<blockquote>
+<p>Gradle确定tasks子集并执行（tasks是在Configuration阶段创建和完成参数配置的）。这里的tasks子集是根据gradle命令传递的task任务名参数（eg：<code>./gradlew clean</code>）以及当前目录决定的，最后Gradle再执行对应的task集。</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.gradle.org/current/userguide/build_lifecycle.html">Gradle官网：https://docs.gradle.org/current/userguide/build_lifecycle.html</a></p>
+<blockquote>
+<p>总结：Gradle构建流程就是配置和执行相应的gradle脚本之后，最后执行一系列的task任务，我们可以通过日志打印看看这个流程。</p>
+</blockquote>
+<p>我们知道Gradle只是一个构建工具，每个Android项目点击build之后，其实就是执行一系列的task，那执行这些task之前，gradle会先依次执行项目里头的gradle配置文件，这里的配置文件有：</p>
+<ul>
+<li>根目录的settings.gradle</li>
+<li>根目录的build.gradle</li>
+<li>各个module下的build.gradle文件</li>
+</ul>
+<p>我们可以添加日志打印，看下这些配置文件的执行顺序</p>
+<p><img src="/images/gradle_build_00.png" alt="gradle_build_00"></p>
+<p>添加日志打印后的执行结果，可以看到配置文件的执行顺序为：<strong>settings.gradle -&gt; 根目录build.gradle -&gt; 各个module的build.gradle</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">This is settings.gradle...</span><br><span class="line"></span><br><span class="line">&gt; Configure project :</span><br><span class="line">This is root build.gradle...</span><br><span class="line"></span><br><span class="line">&gt; Configure project :app</span><br><span class="line">This is app <span class="keyword">module</span> build.gradle...</span><br><span class="line"></span><br><span class="line">&gt; Configure project :library1</span><br><span class="line">This is library1 <span class="keyword">module</span> build.gradle...</span><br><span class="line"></span><br><span class="line">&gt; Configure project :library2</span><br><span class="line">This is library1 <span class="keyword">module</span> build.gradle...</span><br><span class="line"></span><br><span class="line">&gt; Task :app:preBuild UP-TO-DATE</span><br><span class="line">&gt; Task :app:preDebugBuild UP-TO-DATE</span><br><span class="line">&gt; Task :library1:preBuild UP-TO-DATE</span><br><span class="line">&gt; Task :library1:preDebugBuild UP-TO-DATE</span><br><span class="line">&gt; Task :library2:preBuild UP-TO-DATE</span><br><span class="line">&gt; Task :library2:preDebugBuild UP-TO-DATE</span><br><span class="line">&gt; Task :library2:compileDebugAidl NO-SOURCE</span><br><span class="line">&gt; ...</span><br><span class="line">&gt; Task :app:assembleRelease</span><br><span class="line">&gt; Task :app:assemble</span><br><span class="line">&gt; Task :app:build</span><br><span class="line"></span><br><span class="line">BUILD SUCCESSFUL in 1m 53s</span><br><span class="line"><span class="number">181</span> actionable tasks: <span class="number">43</span> executed, <span class="number">138</span> up-to-date</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>那各module下的gradle配置文件又主要做了什么事情呢？</p>
+<ol>
+<li>我们先看settings.gradle（获取整个项目的结构组成）</li>
+</ol>
+<p>其实每个gradle配置文件里头执行的都是方法，我们通过Android Studio可以点进去看一下，include方法</p>
+<p><img src="/images/gradle_build_01.png" alt="gradle_build_01"></p>
+<p>include方法参数为可变参数，那可能有些人比较疑问，为什么可以用下面这种方式</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> <span class="string">&#x27;:app&#x27;</span>, <span class="string">&#x27;:library1&#x27;</span>, <span class="string">&#x27;:library2&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>这个就涉及groovy的语法了，调用方法时，括号时可以省略的，关于groovy语法，可以自行网上了解。如果你喜欢的话，可以改成</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">include</span><span class="params">(<span class="string">&#x27;:app&#x27;</span>, <span class="string">&#x27;:library1&#x27;</span>, <span class="string">&#x27;:library2&#x27;</span>)</span></span></span><br></pre></td></tr></table></figure>
+<p>相信这么写的话，就没有疑问了。include将几个模块信息配置到gradle构建任务队列中。</p>
+<ol start="2">
+<li>接下来再看看根目录下的build.gradle文件（配置插件的仓库、整个项目所需依赖库的仓库）</li>
+</ol>
+<figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">buildscript <span class="meta">&#123;...&#125;</span></span><br><span class="line">allprojects <span class="meta">&#123;...&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到执行的是<code>buildscript</code>和<code>allprojects</code>方法，那为什么方法看起来这么像配置文件呢？还是回到groovy语法，在groovy中，闭包是可以当做参数传递的，闭包也是可执行的代码块。为了便于理解这种代码风格，我们写一个闭包，然后执行闭包演示下。</p>
+<p>定义闭包：</p>
+<figure class="highlight flix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">closure</span> </span>= &#123;</span><br><span class="line">    println(<span class="string">&quot;111&quot;</span>);</span><br><span class="line">    println(<span class="string">&quot;222&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用闭包：</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">closure.<span class="built_in">call</span>()</span><br></pre></td></tr></table></figure>
+
+<p>定义testClosure方法并把闭包作为参数：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">testClosure</span> <span class="params">(Closure clo)</span></span> &#123;</span><br><span class="line">    clo.call()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">testClosure(closure)</span><br></pre></td></tr></table></figure>
+
+<p>最后我们再进行简化testClosure方法调用：</p>
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">testClosure</span>(&#123;</span></span><br><span class="line"><span class="function">    <span class="title">println</span>(<span class="string">&quot;111&quot;</span>);</span></span><br><span class="line"><span class="function">    <span class="title">println</span>(<span class="string">&quot;222&quot;</span>);</span></span><br><span class="line"><span class="function">&#125;)</span></span><br></pre></td></tr></table></figure>
+
+<p>我们知道groovy语法是可以省略括号的，所以最终变成：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">testClosure &#123;</span><br><span class="line">    println(<span class="string">&quot;111&quot;</span>)<span class="comment">;</span></span><br><span class="line">    println(<span class="string">&quot;222&quot;</span>)<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>相信看到这里之后再回头看gradle配置文件是在执行方法就不会觉得语法看起来不习惯了吧。</p>
+<p>最后把官网对整个根目录的build.gradle代码贴上来（<strong>英文描述非常非常详细、清晰</strong>）</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The buildscript block is where you configure the repositories and</span></span><br><span class="line"><span class="comment"> * dependencies for Gradle itself—meaning, you should not include dependencies</span></span><br><span class="line"><span class="comment"> * for your modules here. For example, this block includes the Android plugin for</span></span><br><span class="line"><span class="comment"> * Gradle as a dependency because it provides the additional instructions Gradle</span></span><br><span class="line"><span class="comment"> * needs to build Android app modules.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">buildscript</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The repositories block configures the repositories Gradle uses to</span></span><br><span class="line"><span class="comment">     * search or download the dependencies. Gradle pre-configures support for remote</span></span><br><span class="line"><span class="comment">     * repositories such as JCenter, Maven Central, and Ivy. You can also use local</span></span><br><span class="line"><span class="comment">     * repositories or define your own remote repositories. The code below defines</span></span><br><span class="line"><span class="comment">     * JCenter as the repository Gradle should use to look for its dependencies.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * New projects created using Android Studio 3.0 and higher also include</span></span><br><span class="line"><span class="comment">     * Google&#x27;s Maven repository.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">repositories</span> &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The dependencies block configures the dependencies Gradle needs to use</span></span><br><span class="line"><span class="comment">     * to build your project. The following line adds Android plugin for Gradle</span></span><br><span class="line"><span class="comment">     * version 4.2.0 as a classpath dependency.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">dependencies</span> &#123;</span><br><span class="line">        <span class="keyword">classpath</span> <span class="string">&#x27;com.android.tools.build:gradle:4.2.0&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The allprojects block is where you configure the repositories and</span></span><br><span class="line"><span class="comment"> * dependencies used by all modules in your project, such as third-party plugins</span></span><br><span class="line"><span class="comment"> * or libraries. However, you should configure module-specific dependencies in</span></span><br><span class="line"><span class="comment"> * each module-level build.gradle file. For new projects, Android Studio</span></span><br><span class="line"><span class="comment"> * includes JCenter and Google&#x27;s Maven repository by default, but it does not</span></span><br><span class="line"><span class="comment"> * configure any dependencies (unless you select a template that requires some).</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">allprojects</span> &#123;</span><br><span class="line">    <span class="keyword">repositories</span> &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>FAQ：不同Android Gradle Plugin版本出现的构建问题</strong></p>
+</blockquote>
+<p>相信大家经常会遇到一个问题，就是新项目第一次clone到本地之后，项目要解决很多gradle构建失败的异常问题，而且问题还是莫名其妙，有的甚至可能要折腾掉你大半天的时间。其实这种问题很容易处理，只要明白3个点之间的关系（如下），以后就可以弹指间把第一次项目clone到本地还要处理很多gradle构建失败的问题一下子就解决掉。</p>
+<p>1.Android Gradle Plugin版本<br>2.构建你项目的Gradle版本<br>3.Android Studio版本</p>
+<p>不同的Android Studio对gradle构建版本有最低要求，比如我现在本地最新4.2.1版本，Gradle构建最低版本为：4.8.1，不同的Gradle构建版本又对Android Gradle Plugin版本有要求，这个映射关系可以参考google官网 ：<a target="_blank" rel="noopener" href="https://developer.android.google.cn/studio/releases/gradle-plugin">https://developer.android.google.cn/studio/releases/gradle-plugin</a></p>
+<p>知道这三者的关系之后，相信你就知道为啥clone别人开发的项目或者很久的项目后，会报很多gradle构建的异常了吧（比如别人用高版本的Android Gradle Plugin的一些特性提交代码后，你pull下来又由于本地的Android Gradle Plugin太低而报错等等）。</p>
+<blockquote>
+<p><strong>FAQ：旧项目跑起来很多异常</strong></p>
+</blockquote>
+<p>大多是因为Android Gradle Plugin版本较低，而当前AS的版本所用的Gradle构建工具版本要求又相对较高，导致无法正常运行编译。此时可根据Gradle构建的版本去提高Android Gradle Plugin版本即可。当然，有的人就是不想改项目的Android Gradle Plugin版本，那大兄弟完全可以通过Mac终端命令行（Android Studio的话可以用它Terminal），用本地已下载的低版本的gradle构建工具去编译，这样哪怕是的Android Gradle Plugin版本是2.x.x的版本，也可以正常运行起来啦。比如切换到项目目录下后执行如下命令：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/Library/</span>Android<span class="regexp">/gradle/g</span>radle-<span class="number">3.3</span><span class="regexp">/bin/g</span>radle clean build</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>最后再看app模块下的build.gradle的第一行代码，引用android gradle插件。</li>
+</ol>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply <span class="attr">plugin:</span> <span class="string">&#x27;com.android.application&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>只有导入这个插件，我们才可以配置android { } 配置块，配置块所支持的配置参数跟插件版本也是有关系的。如果你的Android Gradle Plugin版本是2.3.1的话，你用compileOptions配置java版本是会报异常的，因为2.3.1的版本还不支持compileOptions扩展方法。</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">android </span>&#123;</span><br><span class="line">	compileOptions&#123;</span><br><span class="line">		sourceCompatibility <span class="keyword">JavaVersion.VERSION_1_8</span></span><br><span class="line"><span class="keyword">	</span>	targetCompatibility <span class="keyword">JavaVersion.VERSION_1_8</span></span><br><span class="line"><span class="keyword"> </span>   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们前面说过，gradle配置文件里头都是执行方法，那android{}配置块的源码又是怎样的呢？我们想看看<code>com.android.application</code>这个插件源码呢？可以把Android Gralde Plugin版本依赖到项目，再进行查看，在dependences添加： </p>
+<p><code>compileOnly &#39;com.android.tools.build:gradle:3.0.1&#39;</code></p>
+<p>通过查找com.android.application.properies声明的类即可查看相应的源码，源码阅读比较庞大，这里不做过多分析。<br><img src="/images/gradle_build_02.png" alt="gradle_build_02"></p>
+<p><img src="/images/gradle_build_03.png" alt="gradle_build_03"></p>
+<p>这里截图主要给大家看下<code>om.android.application</code>插件源码实现的入口。截图里头其实可以看到很多熟悉的配置，比如常见的buildOutputs、buildTypes、productFlavors、signingConfigs等</p>
+<p>Android项目在执行完gradle的配置文件方法后，开始进行一系列的task任务，那build构建流程执行了哪些task任务呢，我们可以通过构建一次打印看下（task比较多，只显示部分）；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">&gt; Task :app:bundleDebugClasses UP-TO-DATE</span><br><span class="line">&gt; Task :app:preDebugUnitTestBuild UP-TO-DATE</span><br><span class="line">&gt; Task :app:javaPreCompileDebugUnitTest UP-TO-DATE</span><br><span class="line">&gt; Task :app:compileDebugUnitTestJavaWithJavac UP-TO-DATE</span><br><span class="line">&gt; Task :app:processDebugUnitTestJavaRes NO-SOURCE</span><br><span class="line">&gt; Task :app:testDebugUnitTest UP-TO-DATE</span><br><span class="line">&gt; Task :app:bundleReleaseClasses UP-TO-DATE</span><br><span class="line">&gt; Task :app:preReleaseUnitTestBuild UP-TO-DATE</span><br><span class="line">&gt; Task :app:javaPreCompileReleaseUnitTest UP-TO-DATE</span><br><span class="line">&gt; Task :app:compileReleaseUnitTestJavaWithJavac UP-TO-DATE</span><br><span class="line">&gt; Task :app:processReleaseUnitTestJavaRes NO-SOURCE</span><br><span class="line">&gt; Task :app:testReleaseUnitTest UP-TO-DATE</span><br><span class="line">&gt; Task :app:test UP-TO-DATE</span><br><span class="line">&gt; Task :app:check</span><br><span class="line">&gt; Task :app:build</span><br><span class="line"></span><br><span class="line">BUILD SUCCESSFUL in 2s</span><br><span class="line">131 actionable tasks: 1 executed, 130 up-to-date</span><br></pre></td></tr></table></figure>
+
+
+<p>这些task集是哪里怎么创建的呢？感兴趣的可以参看TaskManager.java源码</p>
+<p><img src="/images/gradle_build_05.png" alt="gradle_build_05"></p>
+<p>这里截图显示了部分代码，可以看到我们非常熟悉的<code>MergeManifestTask</code></p>
+<p>当然，我们可以通过在gradle配置文件里头添加如下代码，获取各个task对应的的具体代码实现类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">gradle.taskGraph.whenReady &#123;</span><br><span class="line">    it.allTasks.each &#123; task -&gt;</span><br><span class="line">        println <span class="string">&quot;$&#123;task.name&#125; : $&#123;task.class.name - &#x27;_Decorated&#x27;&#125;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>task列表打印结果如下，</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">preBuild</span> : <span class="selector-tag">org</span><span class="selector-class">.gradle</span><span class="selector-class">.api</span><span class="selector-class">.DefaultTask</span></span><br><span class="line"><span class="selector-tag">preDebugBuild</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.internal</span><span class="selector-class">.tasks</span><span class="selector-class">.AndroidVariantTask</span></span><br><span class="line"><span class="selector-tag">preBuild</span> : <span class="selector-tag">org</span><span class="selector-class">.gradle</span><span class="selector-class">.api</span><span class="selector-class">.DefaultTask</span></span><br><span class="line"><span class="selector-tag">preDebugBuild</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.internal</span><span class="selector-class">.tasks</span><span class="selector-class">.AndroidVariantTask</span></span><br><span class="line"><span class="selector-tag">preBuild</span> : <span class="selector-tag">org</span><span class="selector-class">.gradle</span><span class="selector-class">.api</span><span class="selector-class">.DefaultTask</span></span><br><span class="line"><span class="selector-tag">preDebugBuild</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.internal</span><span class="selector-class">.tasks</span><span class="selector-class">.AndroidVariantTask</span></span><br><span class="line"><span class="selector-tag">compileDebugAidl</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.AidlCompile</span></span><br><span class="line"><span class="selector-tag">compileDebugAidl</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.AidlCompile</span></span><br><span class="line"><span class="selector-tag">compileDebugAidl</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.AidlCompile</span></span><br><span class="line"><span class="selector-tag">packageDebugRenderscript</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.internal</span><span class="selector-class">.tasks</span><span class="selector-class">.PackageRenderscriptTask</span></span><br><span class="line"><span class="selector-tag">packageDebugRenderscript</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.internal</span><span class="selector-class">.tasks</span><span class="selector-class">.PackageRenderscriptTask</span></span><br><span class="line"><span class="selector-tag">compileDebugRenderscript</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.RenderscriptCompile</span></span><br><span class="line"><span class="selector-tag">generateDebugBuildConfig</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.GenerateBuildConfig</span></span><br><span class="line"><span class="selector-tag">javaPreCompileDebug</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.JavaPreCompileTask</span></span><br><span class="line"><span class="selector-tag">writeDebugAarMetadata</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.internal</span><span class="selector-class">.tasks</span><span class="selector-class">.AarMetadataTask</span></span><br><span class="line"><span class="selector-tag">writeDebugAarMetadata</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.internal</span><span class="selector-class">.tasks</span><span class="selector-class">.AarMetadataTask</span></span><br><span class="line"><span class="selector-tag">checkDebugAarMetadata</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.internal</span><span class="selector-class">.tasks</span><span class="selector-class">.CheckAarMetadataTask</span></span><br><span class="line"><span class="selector-tag">generateDebugResValues</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.GenerateResValues</span></span><br><span class="line"><span class="selector-tag">generateDebugResources</span> : <span class="selector-tag">org</span><span class="selector-class">.gradle</span><span class="selector-class">.api</span><span class="selector-class">.DefaultTask</span></span><br><span class="line"><span class="selector-tag">compileDebugRenderscript</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.RenderscriptCompile</span></span><br><span class="line"><span class="selector-tag">generateDebugResValues</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.GenerateResValues</span></span><br><span class="line"><span class="selector-tag">generateDebugResources</span> : <span class="selector-tag">org</span><span class="selector-class">.gradle</span><span class="selector-class">.api</span><span class="selector-class">.DefaultTask</span></span><br><span class="line"><span class="selector-tag">packageDebugResources</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.MergeResources</span></span><br><span class="line"><span class="selector-tag">compileDebugRenderscript</span> : <span class="selector-tag">com</span><span class="selector-class">.android</span><span class="selector-class">.build</span><span class="selector-class">.gradle</span><span class="selector-class">.tasks</span><span class="selector-class">.RenderscriptCompile</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>对每个task对应的Java代码如何实现，感兴趣的可以根据对应的类信息去阅读，比如我们可以看到我们最熟悉的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">generateDebugBuildConfig : com.android.build.gradle.tasks.GenerateBuildConfig</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/gradle_build_04.png" alt="gradle_build_04"></p>
+<p>对gradle构建有个基础了解之后，我们来看看gradle插件如何写，所谓插件，就是把一些逻辑相对比较独立的代码抽出来，那怎么写？gradle写插件的几种方式：<br>我们先来用第一种方式，直接在app module的build.gradle文件编写如下插件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SimplePlugin</span> <span class="keyword">implements</span> <span class="title">Plugin</span>&lt;<span class="title">Project</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">apply</span><span class="params">(Project project)</span> </span>&#123;</span><br><span class="line">        println(<span class="string">&quot;Hello Ricky.&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义好插件类后，要通过调用apply方法引用插件</span></span><br><span class="line">apply plugin: SimplePlugin.class</span><br></pre></td></tr></table></figure>
+
+<p>那如果我想类似android gradle plugin一样，通过配置的方式传递参数呢</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">android </span>&#123;</span><br><span class="line">	compileSdkVersion <span class="number">30</span></span><br><span class="line">	<span class="keyword">buildToolsVersion </span><span class="string">&quot;30.0.3&quot;</span></span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以通过扩展对象实现，我们将原先的逻辑进行补充，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SimplePlugin</span> <span class="keyword">implements</span> <span class="title">Plugin</span>&lt;<span class="title">Project</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">apply</span><span class="params">(Project project)</span> </span>&#123;</span><br><span class="line">        def extension = project.extensions.create(<span class="string">&quot;simpleConfig&quot;</span>, SimpleConfigExtension.class)</span><br><span class="line">        project.afterEvaluate &#123;</span><br><span class="line">            println(<span class="string">&quot;Hello Ricky. compileSdkVersion=$&#123;extension.compileSdkVersion&#125;&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SimpleConfigExtension</span> </span>&#123;</span><br><span class="line">    def compileSdkVersion = <span class="number">27</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">apply plugin: SimplePlugin.class</span><br><span class="line"></span><br><span class="line">simpleConfig &#123;</span><br><span class="line">    compileSdkVersion <span class="number">26</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上就是一个最最最简单的gradle插件实现，当然我们可以把这些gradle插件代码抽到项目里头，这个时候需要一个叫buildSrc的目录，这是一个特殊目录，AS会有特殊的处理，将插代码放置在这个目录即，但一般不建议，buildSr是gradle的规则，如果你有这个目录，gradle就自动把它当做插件来进行构建。</p>
+<blockquote>
+<p>Tips：如果插件需要给多个项目复用，可通过新建一个gradle插件项目单独开发。</p>
+</blockquote>
+<p><strong>最后</strong></p>
+<p>以上就是深入浅出Gradle构建流程的全部，在源码阅读这块就没放很多，主要让大家在<strong>对gradle构建流程有一个宏观层上的印象和概念</strong>，以及以后在处理一些问题的时候的思路更宽，</p>
+<p>比如：</p>
+<ul>
+<li>什么业务场景可以选择开发Gradle插件处理；</li>
+<li>第一次clone项目到本地时，如果快速不折腾的解决构建编译问题；</li>
+<li>有时候构建项目报异常了，如何根据报错的task，去定位对应task源码，再定位和分析问题，以及解决方式；</li>
+<li>在知道gradle的构建流程之后，就可以通过AS工具分析构建时长以及针对一些构建流程可缺省的环节进行优化等等。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://zengfw.github.io/2021/03/20/Shell%E8%84%9A%E6%9C%ACgradle%E5%91%BD%E4%BB%A4%E5%92%8Cgradlew%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8C%BA%E5%88%AB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -650,160 +851,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zengfw.github.io/2020/06/23/Shell%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/author.jpg">
-      <meta itemprop="name" content="曾繁伟">
-      <meta itemprop="description" content="懂一点编程...">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="神秘河流">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/23/Shell%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6/" class="post-title-link" itemprop="url">Shell自定义输入/输出文件描述符</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-23 00:00:00" itemprop="dateCreated datePublished" datetime="2020-06-23T00:00:00+08:00">2020-06-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-16 23:33:01" itemprop="dateModified" datetime="2021-06-16T23:33:01+08:00">2021-06-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Shell/" itemprop="url" rel="index"><span itemprop="name">Shell</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="一、标准文件描述符"><a href="#一、标准文件描述符" class="headerlink" title="一、标准文件描述符"></a>一、标准文件描述符</h2><blockquote>
-<p>我们知道shell脚本日志输出的方式有两种：</p>
-</blockquote>
-<ul>
-<li>在显示器屏幕上显示输出</li>
-<li>将输出重定向到文件中</li>
-</ul>
-<p>Linxu系统将每个对象当作文件处理，这包括输入和输出进程。Linux用文件描述符（file descriptor）来标识每个文件对象。文件描述符是一个非负整数，可以唯一标识会话中打开的文件。shell保留了3个标准文件描述符：0，1，2，如下列表所示：</p>
-<table>
-<thead>
-<tr>
-<th>文件描述符</th>
-<th>缩写</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>STDIN</td>
-<td>标准输入</td>
-</tr>
-<tr>
-<td>1</td>
-<td>STDOUT</td>
-<td>标准输出</td>
-</tr>
-<tr>
-<td>2</td>
-<td>STRERR</td>
-<td>标准错误</td>
-</tr>
-</tbody></table>
-<h3 id="1-1-标准输入"><a href="#1-1-标准输入" class="headerlink" title="1.1 标准输入"></a>1.1 标准输入</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.常规普通使用方式</span></span><br><span class="line">$ cat &lt; testfile</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.通过添加文件描述符使用STDIN</span></span><br><span class="line">$ cat 0&lt; testfile</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="1-2-标准输出"><a href="#1-2-标准输出" class="headerlink" title="1.2 标准输出"></a>1.2 标准输出</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.常规普通使用方式</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;zfw...&quot;</span> &gt; testfile</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.通过添加文件描述符使用STDOUT</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&quot;zfw...&quot;</span> 1&gt; testfile </span><br></pre></td></tr></table></figure>
-
-<h3 id="1-3-标准错误输出"><a href="#1-3-标准错误输出" class="headerlink" title="1.3 标准错误输出"></a>1.3 标准错误输出</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过添加文件描述符使用STDERR</span></span><br><span class="line">$ ls -al xxx 2&gt; testfile</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-4-标准输出、标准错误输出重定向到不同位置文件"><a href="#1-4-标准输出、标准错误输出重定向到不同位置文件" class="headerlink" title="1.4 标准输出、标准错误输出重定向到不同位置文件"></a>1.4 标准输出、标准错误输出重定向到不同位置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls -al asdfasdf 1&gt; testfile1 2&gt; testfile2</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-5-标准输出、标准错误输出重定向到同个位置文件（使用特殊的重定向符号-amp-gt-）"><a href="#1-5-标准输出、标准错误输出重定向到同个位置文件（使用特殊的重定向符号-amp-gt-）" class="headerlink" title="1.5 标准输出、标准错误输出重定向到同个位置文件（使用特殊的重定向符号&amp;&gt;）"></a>1.5 标准输出、标准错误输出重定向到同个位置文件（使用特殊的重定向符号&amp;&gt;）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls -al xxx &amp;&gt; testfile</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="二、重定向输出和输入"><a href="#二、重定向输出和输入" class="headerlink" title="二、重定向输出和输入"></a>二、重定向输出和输入</h2><h3 id="2-1-在脚本中重定向输出"><a href="#2-1-在脚本中重定向输出" class="headerlink" title="2.1 在脚本中重定向输出"></a>2.1 在脚本中重定向输出</h3><p>通过exec命令使shell在脚本执行期间将日志重定向某个特定文件描述符</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">exec</span> 1&gt; testfile</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;11&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;22&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;33&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>在命令行执行脚本文件结果：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sh test.sh</span><br><span class="line">$ cat testfile</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>exec命令会启动一个新shell进程并将STDOUT文件描述符重定向到文件，脚本中发给STDOUT的所有输出会被重定向到文件。</p>
-</blockquote>
-<h3 id="2-2-在脚本中重定向输入"><a href="#2-2-在脚本中重定向输入" class="headerlink" title="2.2 在脚本中重定向输入"></a>2.2 在脚本中重定向输入</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这个命令会告诉shell它应该从文件testfile中获得输入，而不是STDIN</span></span><br><span class="line">$ <span class="built_in">exec</span> 0&lt; testfile</span><br></pre></td></tr></table></figure>
-
-<h2 id="三、自定义输入、输出文件描述符重定向"><a href="#三、自定义输入、输出文件描述符重定向" class="headerlink" title="三、自定义输入、输出文件描述符重定向"></a>三、自定义输入、输出文件描述符重定向</h2><blockquote>
-<p>在脚本中重定向输入和输出时，并不局限于这3个默认的文件描述符。shell中最多可以有9个打开的文件描述符，其它6个从3~8的文件描述符均可用作输入或输出重定向，你可以将这些文件描述符中的任意一个分配给文件，然后在脚本中使用它们。</p>
-</blockquote>
-<h3 id="3-1-创建输出文件描述符"><a href="#3-1-创建输出文件描述符" class="headerlink" title="3.1 创建输出文件描述符"></a>3.1 创建输出文件描述符</h3><p>通过exec命令来给输出分配文件描述符</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">exec</span> 3&gt; /Users/cengfanwei/Desktop/temp</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;11&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;22&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;33&quot;</span> &gt;&amp;3</span><br></pre></td></tr></table></figure>
-
-<p>在命令行执行脚本文件结果如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sh test.sh</span><br><span class="line">11</span><br><span class="line">22</span><br><span class="line">$ cat testfile</span><br><span class="line">33</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>脚本用exec命令将文件描述符3重定向到另一个文件。当脚本执行echo语句时，输出内容会像预想中那样显示在STDOUT上。但你重定向到文件描述符3的那行echo语句的输出却进入了另一个文件。</p>
-</blockquote>
-<h3 id="3-2-创建输入文件描述符"><a href="#3-2-创建输入文件描述符" class="headerlink" title="3.2 创建输入文件描述符"></a>3.2 创建输入文件描述符</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">exec</span> 6&lt; /Users/cengfanwei/Desktop/temp</span><br><span class="line"><span class="built_in">exec</span> 0&lt;&amp;6</span><br><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> line</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Read line: <span class="variable">$line</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="3-3-创建输入输出文件描述符"><a href="#3-3-创建输入输出文件描述符" class="headerlink" title="3.3 创建输入输出文件描述符"></a>3.3 创建输入输出文件描述符</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> 6&lt;&gt; /Users/cengfanwei/Desktop/temp</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="built_in">read</span> line &lt;&amp;6</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Read operation: <span class="variable">$line</span>&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Write operation...&quot;</span> &gt;&amp;6</span><br></pre></td></tr></table></figure>
-
-<p>在命令行执行脚本文件结果如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ sh test.sh</span><br><span class="line">Read operation: Hello world 1!</span><br><span class="line">Read operation: Hello world 2!</span><br><span class="line"></span><br><span class="line">$ cat temp</span><br><span class="line">Hello world 1!</span><br><span class="line">Hello world 2!</span><br><span class="line">Hello world 3!Write operation...</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-4-关闭文件描述符"><a href="#3-4-关闭文件描述符" class="headerlink" title="3.4 关闭文件描述符"></a>3.4 关闭文件描述符</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> 6&gt; /Users/cengfanwei/Desktop/temp</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Test close file descriptor...&quot;</span> &gt;&amp;6</span><br><span class="line"><span class="built_in">exec</span> 6&gt;&amp;-</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Contine writing...&quot;</span> &gt;&amp;6</span><br></pre></td></tr></table></figure>
-
-<p>在命令行执行脚本结果如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sh test.sh</span><br><span class="line">test.sh: line 6: 6: Bad file descriptor</span><br><span class="line"></span><br><span class="line">$ cat temp</span><br><span class="line">Test close file descriptor...</span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -875,12 +922,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span>
       </div>
   </nav>
